@@ -11,7 +11,7 @@ stdenv.mkDerivation {
 
   buildInputs = with pkgs; [
     gradle
-    openjdk12
+    openjdk13
     sqlite
   ];
 }

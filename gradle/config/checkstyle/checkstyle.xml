@@ -138,11 +138,6 @@ Finally, it is worth reading the documentation.
       <property name="caseIndent" value="4"/>
       <property name="throwsIndent" value="8"/>
     </module>
-    <!-- Avoid this.-prefix on method calls -->
-    <module name="RegexpSinglelineJava">
-      <property name="format" value="[^.]this\.[a-zA-Z0-9_]*\("/>
-      <property name="message" value="Avoid this. prefix on method calls"/>
-    </module>
     <!-- Cast to ObjectNode/ArrayNode considered unsafe -->
     <module name="RegexpSinglelineJava">
       <property name="format" value="\((Object|Array)Node\)"/>

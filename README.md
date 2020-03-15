@@ -22,14 +22,14 @@ The project reads closing-prices and info from the project [pystock-data](https:
 if you forgot recursive:  
 `git submodule update --init`
 
-Install openjdk 11 or higher to run the code.
+Install openjdk 13 or higher to run the code.
 You can build the project with `./gradlew build`
 
 # Debug software
 We ship with a java dependency that takes care of all database and network. If you want to look at/debug the database, install sqlite version 3 or higher. After that, you can run something like `sqlite3 $XDG_CACHE_HOME/qwde/database.db`.
 
 # Executables
-`./gradlew :web:run`  
+`./gradlew :webapi:run`  
 or  
 `./gradlew build` to produce a runnable webserver at `./web/build/libs/shadow-<VERSION>-all.jar`. You can run this with `java -jar`. To make sure you find the data, make sure to either run (and copy) the jar file to the project root, or point `$XDG_DATA_HOME` to the folder containing pystock-data.  Our [configuration directory](./web/configuration) contains the setup we use at Hetzner-server.
 

@@ -11,14 +11,10 @@ import           Data.Bool
 import qualified Data.Map    as M
 import           Data.Proxy
 import           Servant.API
-#ifdef __GHCJS__
-import           Servant.Links (linkURI)
-#else
 #if MIN_VERSION_servant(0,17,0)
 import          Servant.Links (linkURI)
 #else
 import	  Servant.Utils.Links (linkURI)
-#endif
 #endif
 import qualified Data.Graph.Plotter as P
 
@@ -39,12 +35,20 @@ githubUrl = "https://github.com/kwrl/qwde"
 defaultColor :: Colour Double
 defaultColor = black
 
+data ServerModel = {
+  uri :: URI
+  , navMenuOpen :: Bool
+}
+
 data Model = Model { 
   uri :: URI
   , navMenuOpen :: Bool
   , mouseCords :: (Int, Int)
   , randomPlot :: P.Plot
   , smaPlot :: P.Plot
+  , bollingerPlot :: P.Plot
+  --, bollingerFromdateWidget :: Flatpickr.Model
+  --, bollingerFromdate :: Time.Day
   } deriving (Eq, Show)
 
 data QwdeRandom = QwdeRandom {
@@ -56,28 +60,38 @@ data QwdeSma = QwdeSma {
   , sma :: [[Double]]
 } deriving (Eq, Show, Generic)
 
+data QwdeBollinger = QwdeBollinger {
+  lowerBand :: [Double]
+  , mean :: [Double]
+  , upperBand :: [Double]
+  , price :: [Double]
+} deriving (Eq, Show, Generic)
+
 data Action
   = Alert
   | ChangeURI URI
   | HandleURI URI
   | ToggleNavMenu
+  | GetBollinger
   | GetRandom
   | GetSma
   | SetRandom QwdeRandom
   | SetSma QwdeSma
+  | SetBollinger QwdeBollinger
   | HandleTouch TouchEvent
   | HandleMouse (Int, Int)
   | NoOp
   deriving (Show, Eq)
 
-type ClientRoutes = Home :<|> Sma :<|> Home
+type ClientRoutes = Home :<|> Sma :<|> Bollinger
 
 handlers :: (Model -> View Action) :<|> ((Model -> View Action) :<|> (Model -> View Action))
-handlers = home :<|> smaPage :<|> home
+handlers = home :<|> smaPage :<|> bollingerPage
 
 -- | Client Routes
 type Home = View Action
 type Sma  = "sma" :> View Action
+type Bollinger  = "bollinger" :> View Action
 
 plotWidth :: Int
 plotWidth = 800
@@ -157,9 +171,13 @@ header = div_ [ class_  "animated fadeIn" ] [
     ]
   ]
 
+bollingerPage :: Model -> View Action
+bollingerPage m@Model{..} = template header (drawPlot bollingerPlot "bollingerPlot" GetBollinger) m
+
 smaPage :: Model -> View Action
 smaPage m@Model{..} = template header (drawPlot smaPlot "smaplot"  GetSma) m
 
+drawPlot :: P.Plot -> [Char] -> Action -> View Action
 drawPlot plot name action = div_ [ class_  "content has-text-centered" ] ([
                  div_ [ id_ . toMisoString $ (name ++ "id") ] [
                      SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
@@ -176,21 +194,6 @@ drawPlot plot name action = div_ [ class_  "content has-text-centered" ] ([
 
 home :: Model -> View Action
 home m@Model{..} = template header (drawPlot randomPlot "random" GetRandom) m
-{-
-  where
-    content show' = div_ [ class_  "content has-text-centered" ] ([
-      div_ [ id_ . toMisoString $ (name ++ "id") ] [
-          SVG.svg_ [ class_ "graph", SVGA.visibility_ show'] ([
-              makeAxis True (P.xAxis randomPlot)
-              , makeAxis False (P.yAxis randomPlot)
-              , makeLabelpoints True (P.xAxis randomPlot)
-              , makeLabelpoints False (P.yAxis randomPlot)
-            ] ++ (map (\(p,l) -> makeLine (pairs $ P.xTicks p) (pairs $ P.yTicks p) (P.color l)) (zip (P.plotData randomPlot) (P.legend randomPlot))))
-        , button_ [ id_ "dome", onClick GetRandom ] [ text "doit" ]
-        , makeLegend (P.legend randomPlot) (toMisoString ("randomLegend" :: String))
-     ]
-     ])
--}
 
 chartCss :: M.Map MisoString MisoString
 chartCss = M.insert "background" "white" $
@@ -281,29 +284,6 @@ middle =
         ]
       ]
 
-cols :: View action
-cols = section_[][div_ [ class_  "container" ] [
-  div_ [class_  "columns" ] [
-   div_ [ class_  "column" ] [
-     h1_ [class_  "title" ] [
-       span_ [class_"icon is-large"] [i_[class_"fa fa-flash"][]]
-     , text  "Fast"
-     ]
-   , h2_ [class_  "subtitle" ] [
-       text  "Mutable virtual dom implementation"
-      ]
-   ]
-   , div_ [ class_  "column" ] [
-     text  "Second column"
-   ]
-   , div_ [ class_  "column" ] [
-      text  "Third column"
-   ]
-   , div_ [ class_  "column" ] [
-      text  "Fourth column"
-    ]
-  ]]]
-
 the404 :: Model -> View Action
 the404 = template header404 content
   where
@@ -326,16 +306,19 @@ the404 = template header404 content
     content = p_ [] [text ":(" ]
 
 -- | Links
-goHome, goSma :: URI
-(goHome, goSma) = (
+goHome, goSma, goBollinger :: URI
+(goHome, goSma, goBollinger) = (
   linkURI (safeLink routes homeProxy)
   , linkURI (safeLink routes smaProxy)
+  , linkURI (safeLink routes bollingerProxy)
   )
 
 homeProxy :: Proxy Home
 homeProxy = Proxy
 smaProxy :: Proxy Sma
 smaProxy = Proxy
+bollingerProxy :: Proxy Bollinger
+bollingerProxy = Proxy
 routes :: Proxy ClientRoutes
 routes = Proxy
 
@@ -362,9 +345,9 @@ hero content uri' navMenuOpen' =
           , a_ [class_ $ "nav-item " <> do  bool mempty "is-active" (uriPath uri' == uriPath goSma)
               , href_ "/sma", onPreventClick (ChangeURI goSma)
               ] [ text "Sma" ]
-          -- a_ [class_ $ "nav-item " <> do  bool mempty "is-active" (uriPath uri' == uriPath goDocs)
-          --    , href_ "/docs", onPreventClick (ChangeURI goDocs)
-          --    ] [ text"Docs" ]
+          , a_ [class_ $ "nav-item " <> do  bool mempty "is-active" (uriPath uri' == uriPath goBollinger)
+              , href_ "/bb", onPreventClick (ChangeURI goBollinger)
+              ] [ text "Bollinger" ]
           ]]]]
     , div_ [ class_  "hero-body" ] [
      div_ [ class_  "container" ] [

@@ -39,11 +39,11 @@ main = do
 initialModel :: C.Model
 initialModel = C.Model uri False (0,0) (P.getPlot 10 C.plotWidth C.plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" C.defaultColor])
   (P.getPlot 10 C.plotWidth C.plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" C.defaultColor])
+  (P.getPlot 10 C.plotWidth C.plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" C.defaultColor])
   where
     uri = case parseURI "http://qwde.no" of
             Just n -> n
             Nothing -> error "misunderstood API?"
- 
 
 app :: Application
 app = serve (Proxy @ API) (static :<|> serverHandlers :<|> pure misoManifest :<|> Tagged handle404)
@@ -92,6 +92,7 @@ handle404 _ respond = respond $ responseLBS
       renderBS $ toHtml $ Wrapper $ C.the404 C.Model { C.uri = C.goHome, C.navMenuOpen = False, C.mouseCords = (0,0)
         , C.randomPlot = C.randomPlot initialModel
         , C.smaPlot = C.smaPlot initialModel
+        , C.bollingerPlot = C.bollingerPlot initialModel
         }
 
 instance L.ToHtml a => L.ToHtml (Wrapper a) where
@@ -127,8 +128,10 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
           cssRef animateRef
           cssRef bulmaRef
           cssRef fontAwesomeRef
+          cssRef flatpickrRef
           jsRef "/static/buttons.js"
           jsRef "/static/all.js"
+          jsRef "https://cdn.jsdelivr.net/npm/flatpickr"
         L.body_ (L.toHtml x)
           where
             jsRef href =
@@ -136,10 +139,6 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
                 [ makeAttribute "src" href
                 , makeAttribute "async" mempty
                 , makeAttribute "defer" mempty
-                ]
-            jsSyncRef href =
-              L.with (L.script_ mempty)
-                [ makeAttribute "src" href
                 ]
             cssRef href =
               L.with (L.link_ mempty) [
@@ -151,24 +150,14 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
 fontAwesomeRef :: MisoString
 fontAwesomeRef = "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
 
+flatpickrRef :: MisoString
+flatpickrRef = "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+
 animateRef :: MisoString
 animateRef = "static/animate.min.css"
 
 bulmaRef :: MisoString
 bulmaRef = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.3/css/bulma.min.css"
-
--- serverHandlers ::
---        Handler (Wrapper (View C.Action))
---   :<|> Handler (Wrapper (View C.Action))
---   :<|> Handler (Wrapper (View C.Action))
--- serverHandlers = examplesHandler
---   :<|> docsHandler
---   :<|> homeHandler
---      where
---        send f u = pure $ Wrapper $ f C.Model {uri = u, navMenuOpen = False}
---        homeHandler = send C.home C.goHome
---        examplesHandler = send examples goExamples
---        docsHandler  = send docs goDocs
 
 serverHandlers ::
        Handler (Wrapper (View C.Action))
@@ -176,8 +165,10 @@ serverHandlers ::
   :<|> Handler (Wrapper (View C.Action))
 serverHandlers = homeHandler
   :<|> smaHandler
-  :<|> homeHandler
+  :<|> bollingerHandler
      where
-       send f u = pure $ Wrapper $ f initialModel
+       --send f u = pure $ Wrapper $ f initialModel
+       send f u = pure $ Wrapper $ f initialModel { C.uri = u }
        homeHandler = send C.home C.goHome
        smaHandler = send C.smaPage C.goSma
+       bollingerHandler = send C.bollingerPage C.goBollinger

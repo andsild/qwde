@@ -27,10 +27,10 @@ import java.util.concurrent.Callable;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "the title",
-                version = "0.0",
+                title = "qwde",
+                version = "0.1",
                 description = "My API",
-                license = @License(name = "GPL v3", url = "http://qwde.info"),
+                license = @License(name = "GPL v3", url = "http://qwde.no"),
                 contact = @Contact(url = "Apache 2.0", name = "Anders", email = "dontwantto@sharemy.email")
         ),
         tags = {
@@ -40,9 +40,9 @@ import java.util.concurrent.Callable;
         servers = {
                 @Server(
                         description = "server 1",
-                        url = "http://95.216.220.118:8080/",
+                        url = "http://qwde.no:8080/",
                         variables = {
-                                @ServerVariable(name = "hetzner", description = "8GB 2vCPU", defaultValue = "1", allowableValues = {"1", "2"}),
+                                @ServerVariable(name = "hetzner", description = "8GB 2vCPU", defaultValue = "1", allowableValues = {"1"}),
                         })
         }
 )

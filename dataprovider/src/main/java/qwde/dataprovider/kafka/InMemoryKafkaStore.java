@@ -25,6 +25,7 @@ public class InMemoryKafkaStore {
     public InMemoryKafkaStore() throws IOException {
         this.sharedKafkaTestResource = new SharedKafkaTestResource()
               .withBrokers(1)
+              //.withBrokerProperty("log.dirs", "false")
               .withBrokerProperty("auto.create.topics.enable", "false");
         try {
             this.sharedKafkaTestResource.beforeAll(null);

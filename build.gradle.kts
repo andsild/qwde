@@ -27,10 +27,16 @@ allprojects {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.compilerArgs = listOf("-Xmx4g")
+    options.encoding = "UTF-8"
+    options.compilerArgs.addAll(listOf("-Xmx4g", "--release", "13"))
+    sourceCompatibility = JavaVersion.VERSION_13.toString()
+    targetCompatibility = JavaVersion.VERSION_13.toString()
 }
 
-configure(subprojects.filter { it.name == "analytics" || it.name == "dataprovider" || it.name == "web" || it.name == "trading" }) {
+configure(subprojects.filter { it.name == "analytics"
+        || it.name == "dataprovider"
+        || it.name == "webapi"
+        || it.name == "trading" }) {
     apply(plugin = "java")
     apply(plugin = "ru.vyarus.quality")
 
@@ -39,9 +45,9 @@ configure(subprojects.filter { it.name == "analytics" || it.name == "dataprovide
         "implementation"("ch.qos.logback:logback-classic:1.3.0-alpha4")
         "implementation"("one.util:streamex:0.7.0")
         "testImplementation"("com.flextrade.jfixture:jfixture:2.7.2")
-        "testImplementation"("org.junit.jupiter:junit-jupiter-api:5.4.1")
-        "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.4.1")
-        "testImplementation"("com.google.truth:truth:0.39")
+        "testImplementation"("org.junit.jupiter:junit-jupiter-api:5.6.0")
+        "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.6.0")
+        "testImplementation"("com.google.truth:truth:1.0.1")
     }
 
     tasks.named<Test>("test") {
@@ -51,12 +57,16 @@ configure(subprojects.filter { it.name == "analytics" || it.name == "dataprovide
 
         testLogging.showExceptions = true
     }
-}
 
-//tasks.whenTaskAdded { task ->
-  //if (task.name.contains("spotbugsMain"))
-    //task.enabled = false
-//}
+    afterEvaluate {
+        tasks.named("spotbugsMain") {
+            enabled = false;
+        }
+        //val taskRegex = Regex(""".*spotbugsMain.*""")
+        //val skipTasks = tasks.filter { it.name.matches(taskRegex) }
+        //skipTasks.forEach { logger.info("{}", it.name); it.enabled = false; }
+    }
+}
 
 subprojects {
     version = "1.0"

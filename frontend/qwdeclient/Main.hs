@@ -1,36 +1,41 @@
 {-# LANGUAGE CPP                  #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeOperators #-}
 module Main where
 
-import qualified Common as C
-import qualified Data.Graph.Plotter as P
-
-import Touch
-
+import Data.Aeson (eitherDecodeStrict)
+import Control.Arrow
 import Data.Colour (Colour)
 import Data.Colour.Names
-import Control.Arrow
-import Data.Proxy
+import qualified Data.Graph.Plotter as P
 import qualified Data.Map as M
+import Data.Proxy
+import JavaScript.Web.XMLHttpRequest (Request(..), RequestData(..), xhrByteString, Method(..), contents)
 import Miso hiding (defaultOptions)
 import Miso.String hiding (map, length, take, zip)
-import JavaScript.Web.XMLHttpRequest (Request(..), RequestData(..), xhrByteString, Method(..), contents)
-import Data.Aeson
-
+import Servant.API ((:<|>), (:<|>)(..))
+import Shared.Scene.Actions (Action(..), QwdeRandom(..), QwdeSma(..), QwdeBollinger(..))
+import Shared.Scene.Model
+import Shared.Scene.Routes
+import Shared.Util.Constants (defaultColor, plotWidth, plotHeight)
+import Shared.Page.Home
+import Shared.Page.MissingPage
+import Shared.Page.Plots
+import Touch
 import qualified Widget.Flatpickr as Flatpickr
 
+handlers :: (Model -> View Action) :<|> ((Model -> View Action) :<|> (Model -> View Action))
+handlers = home :<|> smaPage :<|> bollingerPage
+
 main :: IO ()
-main = miso $ \currentURI -> App
-    { model = C.Model currentURI False (0,0)
-        (P.getPlot 10 C.plotWidth C.plotHeight (map show ([1..10] :: [Int])) ([[1..10]] :: [[Double]]) ([P.PlotLegend "" C.defaultColor]))
-        (P.getPlot 10 C.plotWidth C.plotHeight (map show ([1..10] :: [Int])) ([[1..10]] :: [[Double]]) ([P.PlotLegend "" C.defaultColor]))
-        (P.getPlot 10 C.plotWidth C.plotHeight (map show ([1..10] :: [Int])) ([[1..10]] :: [[Double]]) ([P.PlotLegend "" C.defaultColor]))
+main = miso $ \_ -> App
+    { model = initialModel
     , view = viewModel
     , ..
     }
       where
-        initialAction = C.NoOp
+        initialAction = NoOp
         mountPoint = Nothing
         update = updateModel
         --events = defaultEvents
@@ -38,111 +43,100 @@ main = miso $ \currentURI -> App
         events = M.insert (pack "mousemove") False $
                  M.insert (pack "touchstart") False $
                  M.insert (pack "touchmove") False defaultEvents
-        subs = [ uriSub C.HandleURI, (mouseSub C.HandleMouse) ]
+        subs = [ uriSub HandleURI, (mouseSub HandleMouse) ]
         viewModel m =
-          case runRoute (Proxy :: Proxy C.ClientRoutes) C.handlers C.uri m of
-            Left _ -> C.the404 m
+          case runRoute (Proxy :: Proxy ClientRoutes) handlers uri m of
+            Left _ -> the404 m
             Right v -> v
 
-instance FromJSON C.QwdeRandom where
-  parseJSON = genericParseJSON defaultOptions { fieldLabelModifier = camelTo2 '_' }
-instance FromJSON C.QwdeSma where
-  parseJSON = genericParseJSON defaultOptions { fieldLabelModifier = camelTo2 '_' }
-instance FromJSON C.QwdeBollinger where
-  parseJSON = genericParseJSON defaultOptions { fieldLabelModifier = camelTo2 '_' }
+backend :: String
+backend = "http://localhost:8081/api/"
 
-backend =
-#if PRODUCTION
-  "http://qwde.no:8080/"
-#else
-  "http://localhost.no:8080/"
-#endif
-
-getQwdeRandom :: IO C.QwdeRandom
+getQwdeRandom :: IO QwdeRandom
 getQwdeRandom = do
   Just resp <- contents <$> xhrByteString req
-  case eitherDecodeStrict resp :: Either String C.QwdeRandom of
+  case eitherDecodeStrict resp :: Either String QwdeRandom of
     Left s -> error s
     Right j -> pure j
   where
     req = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "/random")
+                  , reqURI = pack (backend ++ "random")
                   , reqLogin = Nothing
                   , reqHeaders = []
                   , reqWithCredentials = False
                   , reqData = NoData
                   }
 
-getQwdeSma :: IO C.QwdeSma
+getQwdeSma :: IO QwdeSma
 getQwdeSma = do
   Just resp <- contents <$> xhrByteString req
-  case eitherDecodeStrict resp :: Either String C.QwdeSma of
+  case eitherDecodeStrict resp :: Either String QwdeSma of
     Left s -> error s
     Right j -> pure j
   where
     req = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "sma/twtr/20150102?toDate=20170301")
+                  , reqURI = pack (backend ++ "sma?ticker=twtr&fromDate=20150102&toDate=20170301")
                   , reqLogin = Nothing
                   , reqHeaders = []
                   , reqWithCredentials = False
                   , reqData = NoData
                   }
 
-getQwdeBollinger :: IO C.QwdeBollinger
+getQwdeBollinger :: IO QwdeBollinger
 getQwdeBollinger = do
   Just resp <- contents <$> xhrByteString req
-  case eitherDecodeStrict resp :: Either String C.QwdeBollinger of
+  case eitherDecodeStrict resp :: Either String QwdeBollinger of
     Left s -> error s
     Right j -> pure j
   where
     req = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "bb/twtr/20150102?toDate=20170301")
+                  , reqURI = pack (backend ++ "bb?ticker=twtr&fromDate=20150102&toDate=20170301")
                   , reqLogin = Nothing
                   , reqHeaders = [("Content-Type", "text/plain"), ("Accept-Language", "nb-NO,nb")]
                   , reqWithCredentials = False
                   , reqData = NoData
                   }
 
-updateModel :: C.Action -> C.Model -> Effect C.Action C.Model
-updateModel (C.HandleURI u) m = m { C.uri = u } <# do
-  pure C.NoOp
-updateModel (C.ChangeURI u) m = m { C.navMenuOpen = False } <# do
+updateModel :: Action -> Model -> Effect Action Model
+updateModel (HandleURI u) m = m { uri = u } <# do
+  pure NoOp
+updateModel (ChangeURI u) m = m { navMenuOpen = False } <# do
   pushURI u
-  pure C.NoOp
-updateModel C.Alert m@C.Model{..} = m <# do
+  pure NoOp
+updateModel Alert m@Model{..} = m <# do
   alert $ pack (show uri)
-  pure C.NoOp
-updateModel C.ToggleNavMenu m@C.Model{..} = m { C.navMenuOpen = not navMenuOpen } <# do
-  pure C.NoOp
-updateModel C.GetRandom m@C.Model{..} = m <# do
-  C.SetRandom <$> getQwdeRandom
-updateModel (C.SetRandom apiData) m@C.Model{..} = noEff m { C.randomPlot = P.getPlot 10 C.plotWidth (C.plotHeight - 200)
-    (take (length $ C.numbers apiData) $ map show ([1..] :: [Int]))
-    ([C.numbers apiData])
-    [P.PlotLegend "random" C.defaultColor]
+  pure NoOp
+updateModel ToggleNavMenu m@Model{..} = m { navMenuOpen = not navMenuOpen } <# do
+  pure NoOp
+updateModel GetRandom m@Model{..} = m <# do
+  SetRandom <$> getQwdeRandom
+updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 10 plotWidth (plotHeight - 200)
+    (take (length $ numbers apiData) $ map show ([1..] :: [Int]))
+    ([numbers apiData])
+    [P.PlotLegend "random" defaultColor]
  }
-updateModel C.GetSma m@C.Model{..} = m <# do
-  C.SetSma <$> getQwdeSma
-updateModel (C.SetSma apiData) m@C.Model{..} = noEff m { C.smaPlot = P.getPlot 10 C.plotWidth (C.plotHeight - 200)
-  (take (length $ C.prices apiData) $ map show ([1..] :: [Int]))
-  ([C.prices apiData] ++ (C.sma apiData))
-  ([P.PlotLegend "sma" C.defaultColor ] ++ (map (\(i,c) -> P.PlotLegend (show $ i * 10) c) $ take (length $ C.sma apiData) (zip ([1..] :: [Int]) colorList)))
+updateModel GetSma m@Model{..} = m <# do
+  SetSma <$> getQwdeSma
+updateModel (SetSma apiData) m@Model{..} = noEff m { smaPlot = P.getPlot 10 plotWidth (plotHeight - 200)
+  (take (length $ prices apiData) $ map show ([1..] :: [Int]))
+  ([prices apiData] ++ (sma apiData))
+  ([P.PlotLegend "sma" defaultColor ] ++ (map (\(i,c) -> P.PlotLegend (show $ i * 10) c) $ take (length $ sma apiData) (zip ([1..] :: [Int]) colorList)))
    }
-updateModel C.GetBollinger m@C.Model{..} = m <# do
-  C.SetBollinger <$> getQwdeBollinger
-updateModel (C.SetBollinger apiData) m@C.Model{..} = noEff m { C.bollingerPlot = P.getPlot 10 C.plotWidth (C.plotHeight - 200)
-  (take (length $ C.price apiData) $ map show ([1..] :: [Int]))
-  [C.price apiData, C.lowerBand apiData, C.upperBand apiData, C.mean apiData]
-  [P.PlotLegend "price" C.defaultColor, P.PlotLegend "lower" (colorList !! 10), P.PlotLegend "upper" (colorList !! 11), P.PlotLegend "mean" (colorList !! 13)]
+updateModel GetBollinger m@Model{..} = m <# do
+  SetBollinger <$> getQwdeBollinger
+updateModel (SetBollinger apiData) m@Model{..} = noEff m { bollingerPlot = P.getPlot 10 plotWidth (plotHeight - 200)
+  (take (length $ price apiData) $ map show ([1..] :: [Int]))
+  [price apiData, lowerBand apiData, highBand apiData, mean apiData]
+  [P.PlotLegend "price" defaultColor, P.PlotLegend "lower" (colorList !! 10), P.PlotLegend "upper" (colorList !! 11), P.PlotLegend "mean" (colorList !! 13)]
    }
-updateModel C.NoOp m = noEff m
-updateModel (C.HandleTouch (TouchEvent touch)) model =
+updateModel NoOp m = noEff m
+updateModel (HandleTouch (TouchEvent touch)) model =
   model <# do
     putStrLn "Touch did move"
     print touch
-    return $ C.HandleMouse $ trunc . page $ touch
-updateModel (C.HandleMouse newCoords) model =
-  noEff model { C.mouseCords = newCoords }
+    return $ HandleMouse $ trunc . page $ touch
+updateModel (HandleMouse newCoords) model =
+  noEff model { mouseCords = newCoords }
 
 trunc :: (Double, Double) -> (Int, Int)
 trunc = truncate *** truncate

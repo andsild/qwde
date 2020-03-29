@@ -23,21 +23,26 @@ executable qwdeserver
     -O0 -threaded -Wall -rtsopts
   hs-source-dirs:
     .
+  other-modules: Util.Types.Ticker, Html
   build-depends:
     aeson
     , base < 5
+    , bytestring
     , containers
     , heredoc
+    , http-client
+    , http-reverse-proxy
     , http-types
     , lens
     , lucid
     , miso
     , mtl
-    , network-uri
     , servant
     , servant-lucid
+    , servant-client
     , servant-server
     , text
+    , transformers
     , qwdeutil
     , qwdeshared
     , wai

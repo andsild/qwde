@@ -30,7 +30,7 @@ executable qwdeclient
       ghcjs-options: -dedupe -DGHCJS_GC_INTERVAL=5000 -Wall
   hs-source-dirs:
     .
-  other-modules Widget
+  other-modules: Widget.Flatpickr
   build-depends:
     base < 5
     , aeson
@@ -43,6 +43,7 @@ executable qwdeclient
     , qwdeshared
     , qwdeutil
     , random
+    , servant
     , time
   default-language:
     Haskell2010

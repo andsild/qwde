@@ -16,7 +16,7 @@ import Shared.Scene.Actions
 import Shared.Scene.Model (Model(..), initialModel)
 import Shared.Scene.Routes
 import Util.Types.Ticker
-import           Data.Aeson (ToJSON)
+import           Data.Aeson (ToJSON, FromJSON)
 import Data.Char (toUpper)
 import Data.Maybe
 import           Data.Proxy (Proxy(..))
@@ -47,9 +47,19 @@ main :: IO ()
 main = do
   IO.hPutStrLn IO.stderr "Running on port 8081..."
   manager <- newManager defaultManagerSettings
+  res <- runClientM queries (mkClientEnv manager (BaseUrl Http "localhost" 8080 ""))
   run 8081 $ logStdout (compress (app manager))
     where
       compress = gzip def { gzipFiles = GzipCompress }
+
+queries :: ClientM Tickers
+queries = getTicker
+data Tickers = Tickers { ticks :: [Ticker] } deriving (Show, Generic)
+instance FromJSON Tickers
+type GatewayAPI = "tickers" :> Get '[JSON] Tickers
+gatewayApi :: Proxy GatewayAPI
+gatewayApi = Proxy
+getTicker = client gatewayApi
 
 app :: Manager -> Application
 app manager = serve (Proxy @ API) (static :<|> serverHandlers :<|> pure misoManifest :<|> (forwardServer manager) :<|> Tagged handle404)

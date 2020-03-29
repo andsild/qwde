@@ -1,21 +1,24 @@
+{-# LANGUAGE DeriveGeneric             #-}
 module Util.Types.Ticker (
   Ticker,
   mkUpper
   ) where
 
+import Data.Aeson (FromJSON)
 import Data.Char (toUpper)
 import Data.Maybe (fromJust, Maybe(..))
+import           GHC.Generics (Generic(..))
 import Servant.API (ToHttpApiData, ToHttpApiData(..), FromHttpApiData(..))
 import qualified Data.Text                    as T
 
-newtype Ticker = Ticker String deriving (Eq, Read, Ord)
+newtype Ticker = Ticker String deriving (Eq, Read, Ord, Generic)
+instance FromJSON Ticker
 instance ToHttpApiData Ticker where
   toUrlPiece s = T.pack (show s)
   toQueryParam s = T.pack (show s)
 
 instance FromHttpApiData Ticker where
   parseUrlPiece = Right . mkUpper . show
-  --parseQueryParam s = T.pack (show s)
 
 instance Show Ticker where
   show (Ticker s) = s

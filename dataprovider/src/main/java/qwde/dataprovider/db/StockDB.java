@@ -23,11 +23,19 @@ public final class StockDB {
     private StockDB() {
     }
 
-    public static Collection<String> getTickers(LocalDate fromDate, LocalDate toDate) throws SQLException {
+    public static Collection<String> getTickers() throws SQLException {
         //final String query = "SELECT symbol FROM StockTicker WHERE timestamp BETWEEN ? AND ?";
-        //try (Connection connection = DatabaseManager.getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
-        //}
-        return Collections.emptyList();
+        final String query = "SELECT DISTINCT symbol FROM StockTicker";
+        try (Connection connection = DatabaseManager.getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
+            try (ResultSet rs = statement.executeQuery()) {
+                //return rs.executeQuery();
+                List<String> tickers = new ArrayList<>();
+                while (rs.next()) {
+                    tickers.add(rs.getString("symbol"));
+                }
+                return tickers;
+            }
+        }
     }
 
     public static CompanyStockData getCompanyData(String stockTicker, LocalDate fromDate, LocalDate toDate) throws SQLException {

@@ -106,7 +106,8 @@ public class App implements Callable<Integer> {
                 .mainClass(App.class)
                 .properties(new HashMap<>() {{
                         put("micronaut.server.port", port);
-                    }})
+                    put("micronaut.server.cors.enabled", false);
+                }})
                 .start();
 
         while (Thread.currentThread().isAlive()) {

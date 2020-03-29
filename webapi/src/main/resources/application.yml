@@ -2,22 +2,17 @@ micronaut:
   application:
     name: qwde
   server:
-    port: 8080
-    netty:
-      log-level: TRACE
     cors:
-      logger:
-        levels:
-          root: TRACE
-      enabled: true
+      enabled: what what in the
+      single-header: true
       configurations:
         all:
           allowedOrigins:
-            - http://localhost:8081
-            - http://localhost:8080
+            - localhost:8081
             - http://qwde.no:8081
-          allowedMethods:
-            - GET
+    port: 8080
+    netty:
+      log-level: TRACE
   router:
     static-resources:
       swagger:

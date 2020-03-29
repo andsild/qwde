@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
-@Controller(value = "/random", produces = MediaType.TEXT_JSON)
+@Controller(value = "/random", produces = MediaType.APPLICATION_JSON)
 public final class Random {
     @Get("/")
     public HttpResponse<ImmutableMap<String, List<Double>>> doGet() {

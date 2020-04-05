@@ -6,8 +6,6 @@ module Main where
 
 import Data.Aeson (eitherDecodeStrict)
 import Control.Arrow
-import Data.Colour (Colour)
-import Data.Colour.Names
 import qualified Data.Graph.Plotter as P
 import qualified Data.Map as M
 import Data.Proxy
@@ -22,6 +20,7 @@ import Shared.Util.Constants (defaultColor, plotWidth, plotHeight)
 import Shared.Page.Home
 import Shared.Page.MissingPage
 import Shared.Page.Plots
+import Util.Color
 import Touch
 import qualified Widget.Flatpickr as Flatpickr
 
@@ -29,8 +28,10 @@ handlers :: (Model -> View Action) :<|> ((Model -> View Action) :<|> (Model -> V
 handlers = home :<|> smaPage :<|> bollingerPage
 
 main :: IO ()
-main = miso $ \_ -> App
-    { model = initialModel
+main = do
+  initModel <- initialModel
+  miso $ \_ -> App
+    { model = initModel
     , view = viewModel
     , ..
     }
@@ -108,6 +109,10 @@ updateModel Alert m@Model{..} = m <# do
   pure NoOp
 updateModel ToggleNavMenu m@Model{..} = m { navMenuOpen = not navMenuOpen } <# do
   pure NoOp
+
+--updateModel (Init) m@Model{..} = m <# do
+  --Flatpickr.viewModel (flatpickrIface $ m ^. mDate) $ m ^. mFlatpickr
+
 updateModel GetRandom m@Model{..} = m <# do
   SetRandom <$> getQwdeRandom
 updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 10 plotWidth (plotHeight - 200)
@@ -140,155 +145,3 @@ updateModel (HandleMouse newCoords) model =
 
 trunc :: (Double, Double) -> (Int, Int)
 trunc = truncate *** truncate
-
-
-colorList :: [Colour Double]
-colorList = [
-  aliceblue
-  , antiquewhite
-  , aqua
-  , aquamarine
-  , azure
-  , beige
-  , bisque
-  , blanchedalmond
-  , blue
-  , blueviolet
-  , brown
-  , burlywood
-  , cadetblue
-  , chartreuse
-  , chocolate
-  , coral
-  , cornflowerblue
-  , cornsilk
-  , crimson
-  , cyan
-  , darkblue
-  , darkcyan
-  , darkgoldenrod
-  , darkgray
-  , darkgreen
-  , darkgrey
-  , darkkhaki
-  , darkmagenta
-  , darkolivegreen
-  , darkorange
-  , darkorchid
-  , darkred
-  , darksalmon
-  , darkseagreen
-  , darkslateblue
-  , darkslategray
-  , darkslategrey
-  , darkturquoise
-  , darkviolet
-  , deeppink
-  , deepskyblue
-  , dimgray
-  , dimgrey
-  , dodgerblue
-  , firebrick
-  , floralwhite
-  , forestgreen
-  , fuchsia
-  , gainsboro
-  , ghostwhite
-  , gold
-  , goldenrod
-  , gray
-  , grey
-  , green
-  , greenyellow
-  , honeydew
-  , hotpink
-  , indianred
-  , indigo
-  , ivory
-  , khaki
-  , lavender
-  , lavenderblush
-  , lawngreen
-  , lemonchiffon
-  , lightblue
-  , lightcoral
-  , lightcyan
-  , lightgoldenrodyellow
-  , lightgray
-  , lightgreen
-  , lightgrey
-  , lightpink
-  , lightsalmon
-  , lightseagreen
-  , lightskyblue
-  , lightslategray
-  , lightslategrey
-  , lightsteelblue
-  , lightyellow
-  , lime
-  , limegreen
-  , linen
-  , magenta
-  , maroon
-  , mediumaquamarine
-  , mediumblue
-  , mediumorchid
-  , mediumpurple
-  , mediumseagreen
-  , mediumslateblue
-  , mediumspringgreen
-  , mediumturquoise
-  , mediumvioletred
-  , midnightblue
-  , mintcream
-  , mistyrose
-  , moccasin
-  , navajowhite
-  , navy
-  , oldlace
-  , olive
-  , olivedrab
-  , orange
-  , orangered
-  , orchid
-  , palegoldenrod
-  , palegreen
-  , paleturquoise
-  , palevioletred
-  , papayawhip
-  , peachpuff
-  , peru
-  , pink
-  , plum
-  , powderblue
-  , purple
-  , red
-  , rosybrown
-  , royalblue
-  , saddlebrown
-  , salmon
-  , sandybrown
-  , seagreen
-  , seashell
-  , sienna
-  , silver
-  , skyblue
-  , slateblue
-  , slategray
-  , slategrey
-  , snow
-  , springgreen
-  , steelblue
-  , Data.Colour.Names.tan
-  , teal
-  , thistle
-  , tomato
-  , turquoise
-  , violet
-  , wheat
-  , white
-  , whitesmoke
-  , yellow
-  , yellowgreen
-  ]
-

@@ -20,6 +20,7 @@ data Action
   | SetBollinger QwdeBollinger
   | HandleTouch TouchEvent
   | HandleMouse (Int, Int)
+  | Init
   | NoOp
   deriving (Show, Eq)
 

@@ -16,6 +16,7 @@ import Shared.Scene.Actions
 import Shared.Scene.Model (Model(..), initialModel)
 import Shared.Scene.Routes
 import Util.Types.Ticker
+import Control.Monad.Trans (lift, liftIO)
 import           Data.Aeson (ToJSON, FromJSON)
 import Data.Char (toUpper)
 import Data.Maybe
@@ -62,7 +63,7 @@ gatewayApi = Proxy
 getTicker = client gatewayApi
 
 app :: Manager -> Application
-app manager = serve (Proxy @ API) (static :<|> serverHandlers :<|> pure misoManifest :<|> (forwardServer manager) :<|> Tagged handle404)
+app manager = serve (Proxy @ API) (static :<|> serverHandlers :<|> pure misoManifest :<|> (forwardServer manager) :<|> (Tagged handle404))
   where
     static = serveDirectoryWith (defaultWebAppSettings "static")
 
@@ -86,20 +87,21 @@ forwardRequest req = do
   where
     strippedApiPrefix = Prelude.foldl (\l r -> C8.append l $ C8.cons '/' r) (C8.pack "") (map E.encodeUtf8 $ pathInfo req)
 
-handle404 :: Application
-handle404 _ respond = respond $ responseLBS
-    status404 [("Content-Type", "text/html")] $ renderBS $ toHtml $ Wrapper $ the404 initialModel
+handle404 :: Application -- type Application = Request -> (Response -> IO ResponseReceived) -> IO ResponseReceived
+handle404 _ respond = do
+  im <- liftIO initialModel
+  respond $ let v = the404 im in responseLBS status404 [("Content-Type", "text/html")] $ renderBS $ toHtml $ Wrapper $ v
 
 serverHandlers ::
-       Handler (Wrapper (View Action))
-  :<|> Handler (Wrapper (View Action))
-  :<|> Handler (Wrapper (View Action))
-serverHandlers = homeHandler
-  :<|> smaHandler
-  :<|> bollingerHandler
+       Handler (Wrapper ((View Action)))
+  :<|> Handler (Wrapper ((View Action)))
+  :<|> Handler (Wrapper ((View Action)))
+serverHandlers = homeHandler :<|> smaHandler :<|> bollingerHandler
      where
-       --send f u = pure $ Wrapper $ f initialModel
-       send f u = pure $ Wrapper $ f initialModel { uri = u }
+       --send f u = pure $ Wrapper $ f initialModel { uri = u }
+       send f u = do
+         im <- liftIO initialModel
+         pure $ Wrapper $ f im { uri = u }
        homeHandler = send home goHome
        smaHandler = send smaPage goSma
        bollingerHandler = send bollingerPage goBollinger

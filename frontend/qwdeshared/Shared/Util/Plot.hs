@@ -5,6 +5,7 @@ module Shared.Util.Plot where
 import qualified Data.Graph.Plotter as P
 import Shared.Scene.Actions
 import Miso
+import Miso.Html.Element (input_)
 import qualified Miso.Svg as SVG
 import Data.Colour.SRGB (sRGB24show)
 import qualified Miso.Svg.Attribute as SVGA
@@ -14,8 +15,9 @@ import Data.Colour (Colour)
 
 drawPlot :: P.Plot -> [Char] -> Action -> View Action
 drawPlot plot name action = div_ [ class_  "content has-text-centered" ] ([
-                 div_ [ id_ . toMisoString $ (name ++ "id") ] [
-                     SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
+                input_ []
+                 , div_ [ id_ . toMisoString $ (name ++ "id") ] [
+                    SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
                          makeAxis True (P.xAxis plot)
                          , makeAxis False (P.yAxis plot)
                          , makeLabelpoints True (P.xAxis plot)

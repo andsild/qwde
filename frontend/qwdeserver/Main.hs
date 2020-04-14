@@ -1,7 +1,6 @@
 {-# LANGUAGE DataKinds                  #-}
 {-# LANGUAGE DeriveGeneric             #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE PolyKinds                  #-}
@@ -55,11 +54,13 @@ main = do
 
 queries :: ClientM Tickers
 queries = getTicker
-data Tickers = Tickers { ticks :: [Ticker] } deriving (Show, Generic)
+newtype Tickers = Tickers { ticks :: [Ticker] } deriving (Show, Generic)
 instance FromJSON Tickers
 type GatewayAPI = "tickers" :> Get '[JSON] Tickers
 gatewayApi :: Proxy GatewayAPI
 gatewayApi = Proxy
+
+getTicker :: ClientM Tickers
 getTicker = client gatewayApi
 
 app :: Manager -> Application
@@ -94,8 +95,8 @@ handle404 _ respond = do
 
 serverHandlers ::
        Handler (Wrapper ((View Action)))
-  :<|> Handler (Wrapper ((View Action)))
-  :<|> Handler (Wrapper ((View Action)))
+  :<|> Handler (Wrapper (View Action))
+  :<|> Handler (Wrapper (View Action))
 serverHandlers = homeHandler :<|> smaHandler :<|> bollingerHandler
      where
        --send f u = pure $ Wrapper $ f initialModel { uri = u }

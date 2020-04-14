@@ -68,15 +68,15 @@ getQwdeRandom = do
                   , reqData = NoData
                   }
 
-getQwdeSma :: IO QwdeSma
+getQwdeSma :: Time.Day -> IO QwdeSma
 getQwdeSma = do
-  Just resp <- contents <$> xhrByteString req
+  Just resp <- contents <$> xhrByteString (req text)
   case eitherDecodeStrict resp :: Either String QwdeSma of
     Left s -> error s
     Right j -> pure j
   where
-    req = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "sma?ticker=twtr&fromDate=20150102&toDate=20170301")
+    req t = Request { reqMethod = GET
+                  , reqURI = pack (backend ++ "sma?ticker=" ++ t ++ "&fromDate=20150102&toDate=20170301")
                   , reqLogin = Nothing
                   , reqHeaders = []
                   , reqWithCredentials = False
@@ -121,7 +121,7 @@ updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 1
     [P.PlotLegend "random" defaultColor]
  }
 updateModel GetSma m@Model{..} = m <# do
-  SetSma <$> getQwdeSma
+  SetSma <$> getQwdeSma smaFromdate
 updateModel (SetSma apiData) m@Model{..} = noEff m { smaPlot = P.getPlot 10 plotWidth (plotHeight - 200)
   (take (length $ prices apiData) $ map show ([1..] :: [Int]))
   ([prices apiData] ++ (sma apiData))

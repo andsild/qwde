@@ -1,0 +1,4 @@
+packages: qwdeutil/
+          qwdeshared/
+          qwdeclient/
+          qwdeserver/

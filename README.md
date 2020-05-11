@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/andsild/qwde.svg?branch=master)](https://travis-ci.org/andsild/qwde) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![HitCount](http://hits.dwyl.io/kwrl/qwde.svg)](http://hits.dwyl.io/kwrl/qwde) 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![HitCount](http://hits.dwyl.io/kwrl/qwde.svg)](http://hits.dwyl.io/kwrl/qwde) 
 # Stockerface
 Getting around with stock data.
 

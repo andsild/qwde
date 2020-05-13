@@ -1,0 +1,201 @@
+openapi: 3.0.1
+info:
+  title: qwde
+  description: My API
+  contact:
+    name: Anders
+    url: Apache 2.0
+    email: dontwantto@sharemy.email
+  license:
+    name: GPL v3
+    url: http://qwde.no
+  version: "0.1"
+externalDocs:
+  description: definition docs desc
+servers:
+- url: http://qwde.no:8080/
+  description: server 1
+  variables:
+    hetzner:
+      description: 8GB 2vCPU
+      default: "1"
+tags:
+- name: Tag 1
+  description: desc 1
+  externalDocs:
+    description: docs desc
+paths:
+  /bb:
+    get:
+      operationId: doGet
+      parameters:
+      - name: ticker
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: toDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /:
+    get:
+      operationId: doGet
+      parameters: []
+      responses:
+        default:
+          description: doGet default response
+          content:
+            text/html:
+              schema:
+                type: string
+  /portfolio/{tickers}/{fromDate}:
+    get:
+      operationId: portfolio
+      parameters:
+      - name: tickers
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: portfolio default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /random:
+    get:
+      operationId: doGet
+      parameters: []
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/List<Double>'
+  /sma:
+    get:
+      operationId: doGet
+      parameters:
+      - name: ticker
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: toDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /statistics/{ticker}/{fromDate}:
+    get:
+      operationId: doGet
+      parameters:
+      - name: ticker
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: doGet default response
+          content:
+            text/html:
+              schema:
+                type: string
+  /tickers:
+    get:
+      operationId: doGet
+      parameters: []
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /tradeengine/{tickers}/{algorithms}/{fromDate}:
+    get:
+      operationId: doGet
+      parameters:
+      - name: tickers
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: algorithms
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: toDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+components:
+  schemas:
+    Object:
+      type: object
+    List<Double>:
+      type: object

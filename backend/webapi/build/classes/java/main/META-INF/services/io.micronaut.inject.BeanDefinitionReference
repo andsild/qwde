@@ -1,0 +1,14 @@
+qwde.webapi.servlets.$SimpleMovingAverageDefinitionClass
+qwde.webapi.servlets.$$TickersDefinition$InterceptedDefinitionClass
+qwde.webapi.servlets.configuration.$TradeEngineConfigurationDefinitionClass
+qwde.webapi.servlets.$TradeEngineServletDefinitionClass
+qwde.webapi.servlets.$GenericNon200HttpHandlerDefinitionClass
+qwde.webapi.servlets.$$SimpleMovingAverageDefinition$InterceptedDefinitionClass
+qwde.webapi.servlets.$StockOverviewDefinitionClass
+qwde.webapi.servlets.$IndexDefinitionClass
+qwde.webapi.servlets.$PortfolioDefinitionClass
+qwde.webapi.$AppDefinitionClass
+qwde.webapi.servlets.$$BollingerBrandDefinition$InterceptedDefinitionClass
+qwde.webapi.servlets.$RandomDefinitionClass
+qwde.webapi.servlets.$TickersDefinitionClass
+qwde.webapi.servlets.$BollingerBrandDefinitionClass

@@ -18,7 +18,7 @@ data Model = Model {
   , randomPlot :: P.Plot
   , smaPlot :: P.Plot
   , bollingerPlot :: P.Plot
-  , smaFromdate :: Time.Day
+  , fromDate :: Time.Day
   --, bollingerFromdateWidget :: View Action -- relies on JS type
   --, bollingerFromdate :: Time.Day
   } deriving (Eq, Show)

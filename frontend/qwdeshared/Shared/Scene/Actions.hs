@@ -6,6 +6,9 @@ import Data.Aeson (FromJSON, fieldLabelModifier, parseJSON, ToJSON(..), defaultO
 import           Servant.API (URI(..))
 import           Touch
 import GHC.Generics (Generic)
+import Miso.String (MisoString)
+import qualified Data.Time.Calendar as Time
+import qualified Data.Time.Format as Time
 
 data Action
   = Alert
@@ -20,6 +23,8 @@ data Action
   | SetBollinger QwdeBollinger
   | HandleTouch TouchEvent
   | HandleMouse (Int, Int)
+  | ParseFromdate MisoString
+  | SetFromdate Time.Day
   | Init
   | NoOp
   deriving (Show, Eq)

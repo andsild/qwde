@@ -16,7 +16,7 @@ import Data.Colour (Colour)
 drawPlot :: P.Plot -> [Char] -> Action -> View Action
 drawPlot plot name action = div_ [ class_  "content has-text-centered" ] ([
                 --div_ [ id_ . toMisoString $ (name ++ "cal") ] []
-                input_ [ id_ . toMisoString $ (name ++ "tickerName"), type_ "date",  ]
+                input_ [ type_ "date", onChange $ ParseFromdate ]
                  , div_ [ id_ . toMisoString $ (name ++ "id") ] [
                     SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
                          makeAxis True (P.xAxis plot)

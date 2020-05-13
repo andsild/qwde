@@ -23,6 +23,10 @@ import Shared.Page.Plots
 import Util.Color
 import Touch
 import qualified Widget.Flatpickr as Flatpickr
+import qualified Data.Time.Calendar as Time
+import qualified Data.Time.Format as Time
+import qualified Data.Time.Calendar as Time
+import qualified Data.Time.Clock as Time
 
 handlers :: (Model -> View Action) :<|> ((Model -> View Action) :<|> (Model -> View Action))
 handlers = home :<|> smaPage :<|> bollingerPage
@@ -69,14 +73,14 @@ getQwdeRandom = do
                   }
 
 getQwdeSma :: Time.Day -> IO QwdeSma
-getQwdeSma = do
-  Just resp <- contents <$> xhrByteString (req text)
+getQwdeSma time = do
+  Just resp <- contents <$> xhrByteString (req time)
   case eitherDecodeStrict resp :: Either String QwdeSma of
     Left s -> error s
     Right j -> pure j
   where
     req t = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "sma?ticker=" ++ t ++ "&fromDate=20150102&toDate=20170301")
+                  , reqURI = pack (backend ++ "sma?ticker=" ++ "twtr" ++ "&fromDate=20150102&toDate=20170301")
                   , reqLogin = Nothing
                   , reqHeaders = []
                   , reqWithCredentials = False
@@ -97,6 +101,8 @@ getQwdeBollinger = do
                   , reqWithCredentials = False
                   , reqData = NoData
                   }
+parseStringDate :: String -> IO Time.Day
+parseStringDate s = undefined
 
 updateModel :: Action -> Model -> Effect Action Model
 updateModel (HandleURI u) m = m { uri = u } <# do
@@ -120,8 +126,10 @@ updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 1
     ([numbers apiData])
     [P.PlotLegend "random" defaultColor]
  }
+updateModel (ParseFromdate s) m@Model{..} = m <# do
+  SetFromdate <$> parseStringDate (show s)
 updateModel GetSma m@Model{..} = m <# do
-  SetSma <$> getQwdeSma smaFromdate
+  SetSma <$> getQwdeSma fromDate
 updateModel (SetSma apiData) m@Model{..} = noEff m { smaPlot = P.getPlot 10 plotWidth (plotHeight - 200)
   (take (length $ prices apiData) $ map show ([1..] :: [Int]))
   ([prices apiData] ++ (sma apiData))

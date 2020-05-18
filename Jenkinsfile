@@ -13,8 +13,10 @@ node {
     }
     
   stage('Gradle build') {
-    withGradle {
-      sh './gradlew build check'
+    dir("${env.WORKSPACE}/backend") {
+      withGradle {
+        sh './gradlew build check'
+      }
     }
   }
 }

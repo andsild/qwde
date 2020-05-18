@@ -19,7 +19,7 @@ dependencies {
 
     implementation("org.apache.kafka:kafka-clients:${project.rootProject.ext["kafkaVersion"]}")
     implementation("org.apache.kafka:kafka_2.12:${project.rootProject.ext["kafkaVersion"]}")
-    implementation("com.salesforce.kafka.test:kafka-junit5:3.1.1")
+    implementation("com.salesforce.kafka.test:kafka-junit5:3.2.1")
 }
 
 sourceSets {

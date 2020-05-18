@@ -25,38 +25,21 @@ tags:
   externalDocs:
     description: docs desc
 paths:
-  /bb:
+  /statistics/{ticker}/{fromDate}:
     get:
       operationId: doGet
       parameters:
       - name: ticker
-        in: query
+        in: path
         required: true
         schema:
           type: string
       - name: fromDate
-        in: query
+        in: path
         required: true
         schema:
           type: string
           format: date
-      - name: toDate
-        in: query
-        required: true
-        schema:
-          type: string
-          format: date
-      responses:
-        default:
-          description: doGet default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Object'
-  /:
-    get:
-      operationId: doGet
-      parameters: []
       responses:
         default:
           description: doGet default response
@@ -64,41 +47,6 @@ paths:
             text/html:
               schema:
                 type: string
-  /portfolio/{tickers}/{fromDate}:
-    get:
-      operationId: portfolio
-      parameters:
-      - name: tickers
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: fromDate
-        in: path
-        required: true
-        schema:
-          type: string
-          format: date
-      responses:
-        default:
-          description: portfolio default response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Object'
-  /random:
-    get:
-      operationId: doGet
-      parameters: []
-      responses:
-        default:
-          description: doGet default response
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties:
-                  $ref: '#/components/schemas/List<Double>'
   /sma:
     get:
       operationId: doGet
@@ -127,28 +75,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Object'
-  /statistics/{ticker}/{fromDate}:
-    get:
-      operationId: doGet
-      parameters:
-      - name: ticker
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: fromDate
-        in: path
-        required: true
-        schema:
-          type: string
-          format: date
-      responses:
-        default:
-          description: doGet default response
-          content:
-            text/html:
-              schema:
-                type: string
   /tickers:
     get:
       operationId: doGet
@@ -193,6 +119,80 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Object'
+  /portfolio/{tickers}/{fromDate}:
+    get:
+      operationId: portfolio
+      parameters:
+      - name: tickers
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: path
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: portfolio default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /:
+    get:
+      operationId: doGet
+      parameters: []
+      responses:
+        default:
+          description: doGet default response
+          content:
+            text/html:
+              schema:
+                type: string
+  /bb:
+    get:
+      operationId: doGet
+      parameters:
+      - name: ticker
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: fromDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      - name: toDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /random:
+    get:
+      operationId: doGet
+      parameters: []
+      responses:
+        default:
+          description: doGet default response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/List<Double>'
 components:
   schemas:
     Object:

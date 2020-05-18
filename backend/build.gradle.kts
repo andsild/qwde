@@ -2,7 +2,7 @@ group = "qwde"
 version = "0.0.1"
 
 val tablesawVersion by extra("0.34.2")
-val kafkaVersion by extra("2.3.0")
+val kafkaVersion by extra("2.5.0")
 
 buildscript {
     repositories {

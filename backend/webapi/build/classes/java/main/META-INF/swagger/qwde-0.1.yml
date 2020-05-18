@@ -47,12 +47,12 @@ paths:
             text/html:
               schema:
                 type: string
-  /sma:
+  /sma/{ticker}:
     get:
       operationId: doGet
       parameters:
       - name: ticker
-        in: query
+        in: path
         required: true
         schema:
           type: string

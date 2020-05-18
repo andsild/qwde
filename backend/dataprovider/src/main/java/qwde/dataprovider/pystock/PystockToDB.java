@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import com.google.common.base.Predicates;
 import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +55,7 @@ public final class PystockToDB {
             };
             AtomicInteger counter = new AtomicInteger(0);
             int chunkSize = (int) 1e5;
-            StreamEx.of(PystockDataReader.read(Predicates.alwaysTrue())).groupRuns((prev, next) -> counter.incrementAndGet() % chunkSize != 0)
+            StreamEx.of(PystockDataReader.read(x -> true)).groupRuns((prev, next) -> counter.incrementAndGet() % chunkSize != 0)
                   .forEach(writeToDb);
 
             int duplicates = statement.executeUpdate("DELETE FROM StockTicker WHERE rowId NOT IN (SELECT min(rowId) FROM StockTicker GROUP BY symbol, timestamp)");

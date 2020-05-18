@@ -69,7 +69,7 @@ public class SimpleMovingAverage {
         }
     }
 
-    @Get()
+    @Get("{ticker}")
     public HttpResponse<?> doGet(String ticker, @Format("yyyyMMdd") LocalDate fromDate, @QueryValue @Format("yyyyMMdd") Optional<LocalDate> toDate) throws SQLException {
         if (toDate.isPresent() && toDate.get().isBefore(fromDate)) {
             return HttpResponse.badRequest("toDate is before fromDate!");

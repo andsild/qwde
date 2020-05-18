@@ -1,6 +1,4 @@
 node {
-    // Create an Artifactory Gradle instance.
-    def rtGradle = Artifactory.newGradleBuild()
     def buildInfo
 
     stage('Clone sources') {

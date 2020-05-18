@@ -12,7 +12,9 @@ node {
       ])
     }
     
-    stage('Gradle build') {
-        buildInfo = rtGradle.run rootDir: ".", buildFile: 'build.gradle.kts'
+  stage('Gradle build') {
+    withGradle {
+      sh './gradlew build check'
     }
+  }
 }

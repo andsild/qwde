@@ -1,14 +1,17 @@
 node {
-    def buildInfo
+  def buildInfo
 
     stage('Clone sources') {
-        git url: 'https://github.com/andsild/qwde.git'
+      git url: 'https://github.com/andsild/qwde.git'
+      checkout([
+          $class: 'GitSCM',
+          branches: scm.branches,
+          doGenerateSubmoduleConfigurations: true,
+          extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
+          userRemoteConfigs: scm.userRemoteConfigs
+      ])
     }
     
-    stage('Clone submodule') {
-      exec 'git submodule update --init --recursive'
-    }
-
     stage('Gradle build') {
         buildInfo = rtGradle.run rootDir: ".", buildFile: 'build.gradle.kts'
     }

@@ -14,12 +14,13 @@ node {
 
   stage('Env check') {
     sh "java -version"
+    sh "echo $JAVA_HOME"
   }
     
   stage('Gradle build') {
     dir("${env.WORKSPACE}/backend") {
       withGradle {
-        sh './gradlew build check'
+        sh './gradlew build check --info'
       }
     }
   }

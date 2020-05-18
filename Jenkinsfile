@@ -14,9 +14,7 @@ node {
 
   stage('Env check') {
     steps {
-      bash '''#!/usr/bin/env bash
-              java -version
-      '''
+      sh "java -version"
     }
   }
     

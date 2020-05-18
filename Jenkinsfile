@@ -11,6 +11,14 @@ node {
           userRemoteConfigs: scm.userRemoteConfigs
       ])
     }
+
+  stage('Env check') {
+    steps {
+      bash '''#!/usr/bin/env bash
+              java -version
+      '''
+
+  }
     
   stage('Gradle build') {
     dir("${env.WORKSPACE}/backend") {

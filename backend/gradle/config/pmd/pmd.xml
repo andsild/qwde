@@ -127,6 +127,7 @@
     <exclude name="UseCorrectExceptionLogging"/>
     <exclude name="UseLocaleWithCaseConversions"/>
     <exclude name="UseProperClassLoader"/> <!-- earlier j2ee group-->
+    <exclude name="AvoidFieldNameMatchingTypeName"/>
   </rule>
   <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">
     <properties>

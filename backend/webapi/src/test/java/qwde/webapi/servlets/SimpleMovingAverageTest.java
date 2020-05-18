@@ -18,7 +18,7 @@ class SimpleMovingAverageTest {
 
     @Test
     void sma_twtr20150102_14lines() {
-        SimpleMovingAverage.Data sma = client.toBlocking().retrieve(HttpRequest.GET("/sma/twtr/20150102"), SimpleMovingAverage.Data.class);
+        SimpleMovingAverage.Data sma = client.toBlocking().retrieve(HttpRequest.GET("/sma?ticker=twtr&fromDate=20150102"), SimpleMovingAverage.Data.class);
 
         Truth.assertThat(sma.prices.size()).isEqualTo(14);
     }

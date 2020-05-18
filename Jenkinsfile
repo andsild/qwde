@@ -13,9 +13,7 @@ node {
     }
 
   stage('Env check') {
-    steps {
-      sh "java -version"
-    }
+    sh "java -version"
   }
     
   stage('Gradle build') {

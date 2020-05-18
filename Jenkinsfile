@@ -17,7 +17,7 @@ node {
       bash '''#!/usr/bin/env bash
               java -version
       '''
-
+    }
   }
     
   stage('Gradle build') {

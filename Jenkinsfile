@@ -24,4 +24,12 @@ node {
       }
     }
   }
+
+  stage('Gradle publish') {
+    dir("${env.WORKSPACE}/backend") {
+      withGradle {
+        sh './gradlew publish'
+      }
+    }
+  }
 }

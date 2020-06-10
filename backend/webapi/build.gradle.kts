@@ -1,9 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    `java-library`
+  `java-library`
     application
     id("com.github.johnrengelman.shadow") version "5.2.0"
+    `maven-publish`
 }
 
 application {
@@ -12,6 +13,9 @@ application {
 }
 
 version = "0.0.1"
+description = """\
+Qwde backend, reading stock data and presenting various functions through a REST-api.
+"""
 val micronautVersion by extra("1.3.3")
 val jacksonVersion by extra("2.10.3")
 
@@ -82,5 +86,34 @@ tasks {
 tasks {
   build {
     dependsOn(shadowJar)
+  }
+}
+
+val repoUser: String by project
+val repoPassword: String by project
+val completeJar = file("$buildDir/libs/shadow-$version-all.jar")
+val completeArtifact = artifacts.add("archives", completeJar) {
+  type = "jar"
+  builtBy("shadowJar")
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("default") {
+      from(components["java"])
+    }
+    create<MavenPublication>("completeJar") {
+      artifact(completeArtifact)
+    }
+  }
+  repositories {
+    maven {
+      url = uri("http://localhost:8876/repository/internal/")
+      credentials {
+          // Store in ~/.gradle/gradle.properties
+          username = "admin"
+          password = repoPassword
+      }
+    }
   }
 }

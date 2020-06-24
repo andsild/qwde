@@ -23,7 +23,7 @@ executable qwdeserver
     -O0 -threaded -Wall -rtsopts
   hs-source-dirs:
     .
-  other-modules: Util.Types.Ticker, Html
+  other-modules: Manifest, Util.Types.Ticker, Html
   build-depends:
     aeson
     , base < 5

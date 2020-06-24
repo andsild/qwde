@@ -50,3 +50,4 @@ The main requirements for any PR is that the tests still run. In general there w
 Also, to speed up development, the policy is that all code can be moved around, refactored or deleted. As long as the tests run. Though, I wouldn't touch other people's code too much unless I saw a _good_ reason to do so.
 
 If you contribute with (scientific) code, a small explanation is much obliged. We also put some small footnotes on [the wiki](https://github.com/kwrl/qwde/wiki).
+

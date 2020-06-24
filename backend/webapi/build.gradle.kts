@@ -108,7 +108,7 @@ publishing {
   }
   repositories {
     maven {
-      url = uri("http://localhost:8876/repository/internal/")
+      url = uri("http://qwde.no:8876/repository/internal/")
       credentials {
           // Store in ~/.gradle/gradle.properties
           username = "admin"

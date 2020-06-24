@@ -20,7 +20,7 @@ instance ToJSON Manifest
 
 misoManifest :: Manifest
 misoManifest =
-  Manifest { name = "QWDE. Work in progress"
+  Manifest { name = "Qwde webserver to work with Miso. Work in progress"
            , short_name = "qwde"
            , start_url = "."
            , display = "standalone"

@@ -6,7 +6,6 @@ module Util.Types.Ticker (
 
 import Data.Aeson (FromJSON)
 import Data.Char (toUpper)
-import Data.Maybe (fromJust, Maybe(..))
 import           GHC.Generics (Generic(..))
 import Servant.API (ToHttpApiData, ToHttpApiData(..), FromHttpApiData(..))
 import qualified Data.Text                    as T

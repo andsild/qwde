@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import io.micronaut.core.convert.format.Format;
 import io.micronaut.http.HttpResponse;
@@ -7,8 +7,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.dataprovider.db.StockDB;
-import qwde.dataprovider.models.CompanyStockData;
+import qwde.backend.dataprovider.db.StockDB;
+import qwde.backend.dataprovider.models.CompanyStockData;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -42,7 +42,7 @@ public final class Portfolio {
             return HttpResponse.badRequest("No stock data found. Are tickers correct?");
         }
 
-        qwde.analytics.aggregate.Portfolio portfolio = new qwde.analytics.aggregate.Portfolio(companyStockData);
+        qwde.backend.analytics.aggregate.Portfolio portfolio = new qwde.backend.analytics.aggregate.Portfolio(companyStockData);
 
         return HttpResponse.ok(portfolio);
     }

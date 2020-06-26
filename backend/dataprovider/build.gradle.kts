@@ -3,10 +3,10 @@ plugins {
 }
 
 application {
-    mainClassName = "qwde.dataprovider.pystock.App"
+    mainClassName = "qwde.backend.dataprovider.pystock.App"
 }
 
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 dependencies {
     implementation("com.zaxxer:HikariCP:2.7.8")

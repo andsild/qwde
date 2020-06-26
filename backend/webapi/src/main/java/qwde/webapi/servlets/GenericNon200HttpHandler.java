@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;

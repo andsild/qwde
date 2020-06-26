@@ -1,12 +1,12 @@
-package qwde.trading.realtime.algorithm;
+package qwde.backend.trading.realtime.algorithm;
 
 import com.google.common.truth.Truth;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.Test;
-import qwde.dataprovider.kafka.db.SqlliteKafkaStore;
-import qwde.dataprovider.models.StockTicker;
-import qwde.trading.engine.TradeEngine;
-import qwde.trading.model.Summary;
+import qwde.backend.dataprovider.kafka.db.SqlliteKafkaStore;
+import qwde.backend.dataprovider.models.StockTicker;
+import qwde.backend.trading.engine.TradeEngine;
+import qwde.backend.trading.model.Summary;
 
 import java.io.IOException;
 import java.sql.SQLException;

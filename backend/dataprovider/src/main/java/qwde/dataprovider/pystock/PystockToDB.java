@@ -1,4 +1,4 @@
-package qwde.dataprovider.pystock;
+package qwde.backend.dataprovider.pystock;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,8 +15,8 @@ import one.util.streamex.StreamEx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import qwde.dataprovider.db.DatabaseManager;
-import qwde.dataprovider.models.IStockTicker;
+import qwde.backend.dataprovider.db.DatabaseManager;
+import qwde.backend.dataprovider.models.IStockTicker;
 
 public final class PystockToDB {
     private static final Logger LOG = LoggerFactory.getLogger(PystockToDB.class);

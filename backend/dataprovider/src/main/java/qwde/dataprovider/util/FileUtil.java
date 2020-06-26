@@ -1,4 +1,4 @@
-package qwde.dataprovider.util;
+package qwde.backend.dataprovider.util;
 
 import java.io.File;
 import java.io.IOException;

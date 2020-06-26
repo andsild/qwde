@@ -1,10 +1,10 @@
-package qwde.analytics.aggregate;
+package qwde.backend.analytics.aggregate;
 
 import com.flextrade.jfixture.JFixture;
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.Truth;
 import org.junit.jupiter.api.Test;
-import qwde.dataprovider.models.CompanyStockData;
+import qwde.backend.dataprovider.models.CompanyStockData;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;

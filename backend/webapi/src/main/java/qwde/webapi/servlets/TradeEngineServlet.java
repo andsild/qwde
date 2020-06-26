@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import io.micronaut.core.convert.format.Format;
 import io.micronaut.http.HttpResponse;
@@ -8,9 +8,9 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.trading.engine.TradeEngine;
-import qwde.trading.model.Summary;
-import qwde.trading.realtime.algorithm.TradingAlgorithm;
+import qwde.backend.trading.engine.TradeEngine;
+import qwde.backend.trading.model.Summary;
+import qwde.backend.trading.realtime.algorithm.TradingAlgorithm;
 
 import java.io.IOException;
 import java.sql.SQLException;

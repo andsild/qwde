@@ -1,11 +1,11 @@
-package qwde.trading.realtime.algorithm;
+package qwde.backend.trading.realtime.algorithm;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.dataprovider.models.StockTicker;
-import qwde.trading.engine.TradeEngine;
-import qwde.trading.model.Trade;
+import qwde.backend.dataprovider.models.StockTicker;
+import qwde.backend.trading.engine.TradeEngine;
+import qwde.backend.trading.model.Trade;
 
 import java.util.ArrayList;
 import java.util.Collection;

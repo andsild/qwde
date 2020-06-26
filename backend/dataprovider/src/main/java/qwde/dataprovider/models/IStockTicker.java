@@ -1,4 +1,4 @@
-package qwde.dataprovider.models;
+package qwde.backend.dataprovider.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

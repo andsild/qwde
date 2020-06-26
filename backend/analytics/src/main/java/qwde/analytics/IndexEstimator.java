@@ -1,4 +1,4 @@
-package qwde.analytics;
+package qwde.backend.analytics;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

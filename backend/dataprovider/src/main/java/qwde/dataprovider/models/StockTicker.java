@@ -1,6 +1,6 @@
-package qwde.dataprovider.models;
+package qwde.backend.dataprovider.models;
 
-import qwde.dataprovider.util.DateUtil;
+import qwde.backend.dataprovider.util.DateUtil;
 
 import java.time.LocalDateTime;
 

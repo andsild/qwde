@@ -1,4 +1,4 @@
-package qwde.webapi.servlets.configuration;
+package qwde.backend.webapi.servlets.configuration;
 
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.runtime.ApplicationConfiguration;

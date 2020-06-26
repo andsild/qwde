@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import com.google.common.truth.Truth;
 import io.micronaut.http.HttpRequest;
@@ -6,8 +6,8 @@ import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.test.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
-import qwde.trading.model.Summary;
-import qwde.webapi.servlets.configuration.TradeEngineConfiguration;
+import qwde.backend.trading.model.Summary;
+import qwde.backend.webapi.servlets.configuration.TradeEngineConfiguration;
 
 import javax.inject.Inject;
 

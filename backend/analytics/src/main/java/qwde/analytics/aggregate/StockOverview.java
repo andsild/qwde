@@ -1,4 +1,4 @@
-package qwde.analytics.aggregate;
+package qwde.backend.analytics.aggregate;
 
 public class StockOverview {
     public final String symbol;

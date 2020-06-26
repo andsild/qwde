@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import com.google.common.collect.ImmutableMap;
 import io.micronaut.core.convert.format.Format;
@@ -8,12 +8,12 @@ import io.micronaut.http.annotation.Get;
 import io.reactivex.Single;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.analytics.aggregate.StandardDeviation;
-import qwde.analytics.aggregate.Variance;
-import qwde.dataprovider.db.StockDB;
-import qwde.dataprovider.models.CompanyStockData;
-import qwde.webapi.models.StockStatistics;
-import qwde.webapi.plotly.PageRenderer;
+import qwde.backend.analytics.aggregate.StandardDeviation;
+import qwde.backend.analytics.aggregate.Variance;
+import qwde.backend.dataprovider.db.StockDB;
+import qwde.backend.dataprovider.models.CompanyStockData;
+import qwde.backend.webapi.models.StockStatistics;
+import qwde.backend.webapi.plotly.PageRenderer;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

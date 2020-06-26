@@ -1,10 +1,10 @@
-package qwde.dataprovider.pystock;
+package qwde.backend.dataprovider.pystock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import qwde.dataprovider.db.DatabaseManager;
+import qwde.backend.dataprovider.db.DatabaseManager;
 
 import java.io.IOException;
 import java.sql.SQLException;

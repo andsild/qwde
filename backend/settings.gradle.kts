@@ -1,4 +1,4 @@
-rootProject.name = "qwde"
+rootProject.name = "qwde.backend"
 
 include("analytics")
 include("dataprovider")

@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import com.google.common.truth.Truth;
 import io.micronaut.core.type.Argument;

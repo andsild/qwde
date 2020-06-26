@@ -1,4 +1,4 @@
-package qwde.dataprovider.models;
+package qwde.backend.dataprovider.models;
 
 import java.time.LocalDateTime;
 import java.util.List;

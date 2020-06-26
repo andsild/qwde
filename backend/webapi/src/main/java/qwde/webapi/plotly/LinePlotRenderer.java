@@ -1,4 +1,4 @@
-package qwde.webapi.plotly;
+package qwde.backend.webapi.plotly;
 
 import java.util.Arrays;
 import java.util.Collection;

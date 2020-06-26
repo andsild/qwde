@@ -1,4 +1,4 @@
-package qwde.webapi.plotly;
+package qwde.backend.webapi.plotly;
 
 import org.apache.commons.lang3.RandomStringUtils;
 

@@ -1,4 +1,4 @@
-package qwde.dataprovider.kafka;
+package qwde.backend.dataprovider.kafka;
 
 import com.salesforce.kafka.test.KafkaTestUtils;
 import com.salesforce.kafka.test.junit5.SharedKafkaTestResource;

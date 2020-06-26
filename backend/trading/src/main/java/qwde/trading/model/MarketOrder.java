@@ -1,4 +1,4 @@
-package qwde.trading.model;
+package qwde.backend.trading.model;
 
 import java.time.LocalDateTime;
 

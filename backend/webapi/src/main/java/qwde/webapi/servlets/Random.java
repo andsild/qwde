@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import com.google.common.collect.ImmutableMap;
 import io.micronaut.http.HttpResponse;

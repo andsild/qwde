@@ -1,4 +1,4 @@
-package qwde.dataprovider.kafka;
+package qwde.backend.dataprovider.kafka;
 
 
 import com.flextrade.jfixture.JFixture;
@@ -22,9 +22,9 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import qwde.dataprovider.kafka.serializer.LocalDateTimeDeserializer;
-import qwde.dataprovider.kafka.serializer.LocalDateTimeSerializer;
-import qwde.dataprovider.models.StockTicker;
+import qwde.backend.dataprovider.kafka.serializer.LocalDateTimeDeserializer;
+import qwde.backend.dataprovider.kafka.serializer.LocalDateTimeSerializer;
+import qwde.backend.dataprovider.models.StockTicker;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

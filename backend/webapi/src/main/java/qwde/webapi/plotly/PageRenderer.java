@@ -1,4 +1,4 @@
-package qwde.webapi.plotly;
+package qwde.backend.webapi.plotly;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

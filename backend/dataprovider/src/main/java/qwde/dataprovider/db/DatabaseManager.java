@@ -1,4 +1,4 @@
-package qwde.dataprovider.db;
+package qwde.backend.dataprovider.db;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import qwde.dataprovider.pystock.PystockToDB;
-import qwde.dataprovider.util.FileUtil;
+import qwde.backend.dataprovider.pystock.PystockToDB;
+import qwde.backend.dataprovider.util.FileUtil;
 
 public final class DatabaseManager {
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseManager.class);
@@ -63,11 +63,11 @@ public final class DatabaseManager {
             Class.forName(properties.getProperty("development.disk.driver"));
 
             String jdbcUrl = properties.getProperty("development.disk.url");
-            String stringRegex = "\\|XDGCACHEDIR\\|([a-zA-Z]+\\.db)";
+            String stringRegex = "\\|XDGCACHEHOME\\|([a-zA-Z]+\\.db)";
             Pattern regex = Pattern.compile(stringRegex);
             Matcher m = regex.matcher(jdbcUrl);
             if (m.find()) {
-                jdbcUrl = jdbcUrl.replaceFirst(stringRegex, Path.of(FileUtil.createIfNotExists(FileUtil.getCacheDirectory()), m.group(1)).toAbsolutePath().toString().replace("\\", "/"));
+                jdbcUrl = jdbcUrl.replaceFirst(stringRegex, Path.of(FileUtil.createIfNotExists(Path.of(FileUtil.getCacheDirectory(), "qwde").toString()),  m.group(1)).toAbsolutePath().toString().replace("\\", "/"));
             }
             LOG.info("Connecting to db {}", jdbcUrl);
             manager = new DatabaseManager(jdbcUrl);

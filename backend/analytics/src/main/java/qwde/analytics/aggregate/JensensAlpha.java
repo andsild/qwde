@@ -1,4 +1,4 @@
-package qwde.analytics.aggregate;
+package qwde.backend.analytics.aggregate;
 
 public final class JensensAlpha {
     private JensensAlpha() {

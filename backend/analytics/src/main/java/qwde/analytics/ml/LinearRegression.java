@@ -1,4 +1,4 @@
-package qwde.analytics.ml;
+package qwde.backend.analytics.ml;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,8 +1,8 @@
-package qwde.dataprovider.kafka.serializer;
+package qwde.backend.dataprovider.kafka.serializer;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.kafka.common.serialization.Serializer;
-import qwde.dataprovider.models.StockTicker;
+import qwde.backend.dataprovider.models.StockTicker;
 
 public class StockTickerSerializer implements Serializer<StockTicker> {
     @Override

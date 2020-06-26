@@ -1,9 +1,9 @@
-package qwde.dataprovider.db;
+package qwde.backend.dataprovider.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.dataprovider.models.CompanyStockData;
-import qwde.dataprovider.models.StockTicker;
+import qwde.backend.dataprovider.models.CompanyStockData;
+import qwde.backend.dataprovider.models.StockTicker;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

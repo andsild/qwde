@@ -1,4 +1,4 @@
-package qwde.analytics.aggregate;
+package qwde.backend.analytics.aggregate;
 
 import one.util.streamex.StreamEx;
 

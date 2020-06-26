@@ -1,4 +1,4 @@
-package qwde.dataprovider.pystock;
+package qwde.backend.dataprovider.pystock;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -6,9 +6,9 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.dataprovider.models.IStockTicker;
-import qwde.dataprovider.models.StockTicker;
-import qwde.dataprovider.util.FileUtil;
+import qwde.backend.dataprovider.models.IStockTicker;
+import qwde.backend.dataprovider.models.StockTicker;
+import qwde.backend.dataprovider.util.FileUtil;
 
 import java.io.BufferedReader;
 import java.io.File;

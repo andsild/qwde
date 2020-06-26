@@ -1,4 +1,4 @@
-group = "qwde"
+group = "qwde.backend"
 version = "0.0.1"
 
 val tablesawVersion by extra("0.34.2")
@@ -18,7 +18,7 @@ buildscript {
 }
 
 allprojects {
-    group = "qwde"
+    group = "qwde.backend"
 
     repositories {
         mavenLocal()

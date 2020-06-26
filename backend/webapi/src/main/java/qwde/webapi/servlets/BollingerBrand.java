@@ -1,4 +1,4 @@
-package qwde.webapi.servlets;
+package qwde.backend.webapi.servlets;
 
 import com.google.common.collect.Streams;
 import io.micronaut.cache.annotation.CacheConfig;
@@ -11,10 +11,10 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.analytics.aggregate.MovingAverage;
-import qwde.analytics.aggregate.StandardDeviation;
-import qwde.dataprovider.db.StockDB;
-import qwde.dataprovider.models.CompanyStockData;
+import qwde.backend.analytics.aggregate.MovingAverage;
+import qwde.backend.analytics.aggregate.StandardDeviation;
+import qwde.backend.dataprovider.db.StockDB;
+import qwde.backend.dataprovider.models.CompanyStockData;
 
 import java.sql.SQLException;
 import java.time.LocalDate;

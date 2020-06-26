@@ -1,4 +1,4 @@
-package qwde.trading.aggregate;
+package qwde.backend.trading.aggregate;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;

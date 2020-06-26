@@ -1,17 +1,17 @@
-package qwde.trading.engine;
+package qwde.backend.trading.engine;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qwde.dataprovider.kafka.db.SqlliteKafkaStore;
-import qwde.dataprovider.models.StockTicker;
-import qwde.trading.model.MarketOrder;
-import qwde.trading.model.Order;
-import qwde.trading.model.Summary;
-import qwde.trading.model.Trade;
-import qwde.trading.realtime.algorithm.TradingAlgorithm;
+import qwde.backend.dataprovider.kafka.db.SqlliteKafkaStore;
+import qwde.backend.dataprovider.models.StockTicker;
+import qwde.backend.trading.model.MarketOrder;
+import qwde.backend.trading.model.Order;
+import qwde.backend.trading.model.Summary;
+import qwde.backend.trading.model.Trade;
+import qwde.backend.trading.realtime.algorithm.TradingAlgorithm;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package qwde.analytics.aggregate;
+package qwde.backend.analytics.aggregate;
 
 import java.util.List;
 import java.util.stream.Collectors;

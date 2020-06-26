@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClassName = "qwde.dataprovider.pystock.App"
+    mainClassName = "qwde.backend.dataprovider.pystock.App"
 }
 
 version = "0.0.1-SNAPSHOT"

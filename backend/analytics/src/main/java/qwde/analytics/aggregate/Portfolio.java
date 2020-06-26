@@ -1,8 +1,8 @@
-package qwde.analytics.aggregate;
+package qwde.backend.analytics.aggregate;
 
 import one.util.streamex.StreamEx;
-import qwde.analytics.IndexEstimator;
-import qwde.dataprovider.models.CompanyStockData;
+import qwde.backend.analytics.IndexEstimator;
+import qwde.backend.dataprovider.models.CompanyStockData;
 
 import java.util.List;
 import java.util.Map;

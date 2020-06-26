@@ -1,4 +1,4 @@
-package qwde.webapi;
+package qwde.backend.webapi;
 
 import java.util.HashMap;
 import javax.inject.Singleton;
@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import qwde.dataprovider.db.DatabaseManager;
+import qwde.backend.dataprovider.db.DatabaseManager;
 
 import java.io.IOException;
 import java.sql.SQLException;

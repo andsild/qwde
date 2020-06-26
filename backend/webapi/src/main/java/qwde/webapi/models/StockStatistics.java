@@ -1,4 +1,4 @@
-package qwde.webapi.models;
+package qwde.backend.webapi.models;
 
 public class StockStatistics {
     public final String symbol;

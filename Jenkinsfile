@@ -25,11 +25,12 @@ node {
     }
   }
 
-  stage('Gradle publish') {
+  stage('Publish backend') {
     dir("${env.WORKSPACE}/backend") {
       withGradle {
         sh './gradlew publish'
       }
+      sh 'PASS="$(cat /run/secrets/deploy-password)" curl "http://qwde.no:9000/hooks/qwde-deploy?token=$PASSWORD"'
     }
   }
 }

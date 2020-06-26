@@ -8,7 +8,7 @@ plugins {
 }
 
 application {
-    mainClassName = "qwde.webapi.App"
+    mainClassName = "qwde.backend.webapi.App"
     applicationDefaultJvmArgs = listOf("-Dmicronaut.openapi.views.spec=redoc.enabled=true,rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop")
 }
 
@@ -78,7 +78,7 @@ tasks {
     archiveBaseName.set("shadow")
       mergeServiceFiles()
       manifest {
-        attributes(mapOf("Main-Class" to "qwde.webapi.App"))
+        attributes(mapOf("Main-Class" to "qwde.backend.webapi.App"))
       }
   }
 }

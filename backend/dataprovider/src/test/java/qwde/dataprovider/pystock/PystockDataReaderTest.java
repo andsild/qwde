@@ -1,8 +1,8 @@
-package qwde.dataprovider.pystock;
+package qwde.backend.dataprovider.pystock;
 
 import com.google.common.truth.Truth;
 import org.junit.jupiter.api.Test;
-import qwde.dataprovider.models.IStockTicker;
+import qwde.backend.dataprovider.models.IStockTicker;
 
 import java.io.IOException;
 import java.math.BigDecimal;

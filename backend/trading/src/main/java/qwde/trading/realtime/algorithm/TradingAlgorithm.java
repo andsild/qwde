@@ -1,9 +1,9 @@
-package qwde.trading.realtime.algorithm;
+package qwde.backend.trading.realtime.algorithm;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import qwde.dataprovider.models.StockTicker;
-import qwde.trading.model.Trade;
+import qwde.backend.dataprovider.models.StockTicker;
+import qwde.backend.trading.model.Trade;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;

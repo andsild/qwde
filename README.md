@@ -15,10 +15,10 @@ The project reads closing-prices and info from the project [pystock-data](https:
 
 * `analytics` folder contains code for ML, analysis, etc.
 * `dataprovider` folder contains code for getting stock-data and making it available for other projects
-* `web` folder contains code for presenting views and running web server
+* `webapi` folder contains code for presenting views and running web server
 
 # Setup
-`git clone --recursive https://github.com/kwrl/qwde`  
+`git clone --recursive https://github.com/andsild/qwde`  
 if you forgot recursive:  
 `git submodule update --init`
 
@@ -30,8 +30,6 @@ We ship with a java dependency that takes care of all database and network. If y
 
 # Executables
 `./gradlew :webapi:run`  
-or  
-`./gradlew build` to produce a runnable webserver at `./web/build/libs/shadow-<VERSION>-all.jar`. You can run this with `java -jar`. To make sure you find the data, make sure to either run (and copy) the jar file to the project root, or point `$XDG_DATA_HOME` to the folder containing pystock-data.  Our [configuration directory](./web/configuration) contains the setup we use at Hetzner-server.
 
 By default a sqlite database copy of pystock-data is written to   
 * Unix: `$XDG_CACHE_HOME` (default ~/.cache/qwde)  
@@ -40,7 +38,7 @@ By default a sqlite database copy of pystock-data is written to
 Upon running the application, it is checked whether or not the database exists and has data. If not, it is generated. To re-generate the data, you can point `$XDG_CACHE_HOME` elsewhere, or delete the database.db file.
 
 ## Live server
-Code is continuously deployed to http://qwde.no. Its a droplet with 2vCPU and 8 GB RAM. If you want access, send me an email or PM.
+Code is continuously deployed to http://qwde.no. Its a droplet with 4vCPU and 16 GB RAM. If you want access, send me an email or PM.
 
 # Contributing
 Pull- and feature-requests welcome! :smile:
@@ -48,6 +46,3 @@ Pull- and feature-requests welcome! :smile:
 The main requirements for any PR is that the tests still run. In general there will be no thorough code review unless you explicitly ask for it. This is to make it easier to "just fix things" and avoid the corporate procedures we normally go through 9 to 5. At least until the project is of a certain size.
 
 Also, to speed up development, the policy is that all code can be moved around, refactored or deleted. As long as the tests run. Though, I wouldn't touch other people's code too much unless I saw a _good_ reason to do so.
-
-If you contribute with (scientific) code, a small explanation is much obliged. We also put some small footnotes on [the wiki](https://github.com/kwrl/qwde/wiki).
-

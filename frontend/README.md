@@ -1,3 +1,4 @@
+# Qwde frontend
 There's two applications here, one `client` that takes Haskell code to javascript, and one `server` that writes the DOM logic. The `client` needs to be compiled with ghcjs, and the `server` needs to be compiled with ghc.
 
 Somewhat hairy nix setup to get the environment done right, here's howto:

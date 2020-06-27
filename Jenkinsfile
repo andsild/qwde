@@ -1,21 +1,25 @@
 pipeline {
   stages {
     stage('Clone sources') {
-      git url: 'https://github.com/andsild/qwde.git'
-        checkout([
-            $class: 'GitSCM',
-            branches: scm.branches,
-            doGenerateSubmoduleConfigurations: true,
-            extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
-            userRemoteConfigs: scm.userRemoteConfigs
-        ])
+      steps {
+        git url: 'https://github.com/andsild/qwde.git'
+          checkout([
+              $class: 'GitSCM',
+              branches: scm.branches,
+              doGenerateSubmoduleConfigurations: true,
+              extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
+              userRemoteConfigs: scm.userRemoteConfigs
+          ])
+      }
     }
     stage('Env check') {
-      sh "java -version"
-        sh "echo $JAVA_HOME"
+      steps {
+        sh "java -version"
+          sh "echo $JAVA_HOME"
+      }
     }
 
-    stage('Gradle build') {
+    stage('Gradle build backend') {
       when {
         changeset "backend/**"
       }
@@ -26,6 +30,8 @@ pipeline {
           }
         }
       }
+    }
+    stage('Gradle build frontend') {
       when {
         changeset "frontend/**"
       }
@@ -58,6 +64,9 @@ pipeline {
             '''
         }
       }
+    }
+    
+    stage ('Publish frontend') {
       when {
         anyOf {
           changeset "frontend/**"

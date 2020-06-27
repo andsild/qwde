@@ -1,16 +1,14 @@
-node {
-  def buildInfo
-
-    stage('Clone sources') {
-      git url: 'https://github.com/andsild/qwde.git'
-        checkout([
-            $class: 'GitSCM',
-            branches: scm.branches,
-            doGenerateSubmoduleConfigurations: true,
-            extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
-            userRemoteConfigs: scm.userRemoteConfigs
-        ])
-    }
+pipeline {
+  stage('Clone sources') {
+    git url: 'https://github.com/andsild/qwde.git'
+      checkout([
+          $class: 'GitSCM',
+          branches: scm.branches,
+          doGenerateSubmoduleConfigurations: true,
+          extensions: scm.extensions + [[$class: 'SubmoduleOption', parentCredentials: true]],
+          userRemoteConfigs: scm.userRemoteConfigs
+      ])
+  }
   stage('Env check') {
     sh "java -version"
       sh "echo $JAVA_HOME"
@@ -18,9 +16,7 @@ node {
 
   stage('Gradle build') {
     when {
-      anyOf {
-        changeset "backend/**"
-      }
+      changeset "backend/**"
     }
     steps {
       dir("${env.WORKSPACE}/backend") {
@@ -30,9 +26,7 @@ node {
       }
     }
     when {
-      anyOf {
-        changeset "frontend/**"
-      }
+      changeset "frontend/**"
     }
     steps {
       dir("${env.WORKSPACE}/frontend") {

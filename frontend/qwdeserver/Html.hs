@@ -20,7 +20,7 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
         L.head_ $ do
           L.title_ "qwde"
           L.link_ [ L.rel_ "stylesheet"
-                  , L.href_ "static/gh-fork-ribbon.min.css"
+                  , L.href_ "https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
                   ]
           L.link_ [ L.rel_ "manifest"
                   , L.href_ "/manifest.json"
@@ -46,7 +46,7 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
           cssRef bulmaRef
           cssRef fontAwesomeRef
           cssRef flatpickrRef
-          jsRef "/static/buttons.js"
+          jsRef "https://buttons.github.io/buttons.js"
           jsRef "/static/all.js"
           jsRef "https://cdn.jsdelivr.net/npm/flatpickr"
         L.body_ (L.toHtml x)
@@ -71,7 +71,7 @@ flatpickrRef :: MisoString
 flatpickrRef = "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
 
 animateRef :: MisoString
-animateRef = "static/animate.min.css"
+animateRef = "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"
 
 bulmaRef :: MisoString
 bulmaRef = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.3/css/bulma.min.css"

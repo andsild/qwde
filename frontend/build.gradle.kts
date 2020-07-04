@@ -9,11 +9,11 @@ description = """
 
 task<Exec>("build.qwdeserver") {
   description = "build qwdeserver"
-  commandLine("cabal", "install", "--program-suffix=.bin", "qwdeserver", "--installdir=dist-newstyle/target")
+  commandLine("cabal", "install", "--program-suffix=.bin", "qwdeserver", "--installdir=dist-newstyle/target", "--overwrite-policy=always")
   inputs.files(fileTree("./qwdeserver"))
     .withPropertyName("sourceFiles")
     .withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.dir("./dist-newstyle/target")
+  outputs.dir("./dist-newstyle/target/")
 }
 
 task<Exec>("build.qwdeclient") {
@@ -29,67 +29,51 @@ task("build") {
   dependsOn(tasks.withType<Exec>())
 }
 
-fun String.runCommand(workingDir: File = file("./")): String {
-  val parts = this.split("\\s".toRegex())
-    val proc = ProcessBuilder(*parts.toTypedArray())
-    .directory(workingDir)
-    .redirectOutput(ProcessBuilder.Redirect.PIPE)
-    .redirectError(ProcessBuilder.Redirect.PIPE)
-    .start()
 
-    proc.waitFor(1, TimeUnit.MINUTES)
-    return proc.inputStream.bufferedReader().readText().trim()
+task<Tar>("zipper") {
+  dependsOn("build.qwdeserver")
+  dependsOn("build.qwdeclient")
+  compression = Compression.GZIP
+  from("./dist-newstyle/") {
+    includeEmptyDirs = false
+    include(setOf("**/qwdeserver/build/qwdeserver/qwdeserver", "**/qwdeclient/qwdeclient.jsexe/all.js"))
+
+    filesMatching("**/qwdeserver/build/qwdeserver/qwdeserver") {
+      path = "qwdefrontend/"
+      name = "qwdefrontend/qwdeserver.bin"
+      }
+    filesMatching("**/qwdeclient/qwdeclient.jsexe/all.js") {
+      path = "qwdefrontend/"
+      name = "qwdefrontend/all.js"
+      }
+  }
+  into("qwdefrontend")
+  setArchiveName("qwdefrontend.tar.gz")
+  setDestinationDir(File("dist-newstyle/target/"))
 }
 
-
-// TODO: will not work if > 1 file is found
-val qwdeserverPath = "find dist-newstyle/target -name qwdeserver.bin".runCommand()
-val qwdeserverExec = file(qwdeserverPath)
-val qwdeclientPath = "find dist-newstyle/ -name all.js".runCommand()
-val qwdeclientExec = file(qwdeclientPath)
+val exec = file("dist-newstyle/target/qwdefrontend.tar.gz")
 val haskell by configurations.creating
-val qwdeserverArtifact = artifacts.add("haskell", qwdeserverExec) {
-  type = "binary"
+val artifact = artifacts.add("haskell", exec) {
+  type = "tarball"
   builtBy("build.qwdeserver")
   classifier = "prod"
-  extension = "bin"
+  extension = "tar.gz"
   name = "qwdeserver"
-}
-val qwdeclientArtifact = artifacts.add("haskell", qwdeclientExec) {
-  type = "js"
-  builtBy("build.qwdeclient")
 }
 val repoUser: String by project
 val repoPassword: String by project
 
 publishing {
   publications {
-    create<MavenPublication>("qwdeclient") {
-      groupId = "qwde.frontend"
-      description = "Haskell-to-Javascript code that lets you run an isomorphic website"
-      artifact(qwdeclientArtifact)
-      artifactId = "client"
-      pom {
-        name.set("qwdeclient")
-        description.set("desc")
-        url.set("http://qwde.no")
-        developers {
-          developer {
-            id.set("andsild")
-            name.set("Anders")
-            email.set("trolo@lol.lol")
-          }
-        }
-      }
-    }
     create<MavenPublication>("qwdeserver") {
       groupId = "qwde.frontend"
       description = "Haskell binary to run isomorhpic HTTP frontend"
-      artifact(qwdeserverArtifact)
-      artifactId = "server"
+      artifact(artifact)
+      artifactId = "frontend"
       pom {
-        name.set("qwdeserver")
-        description.set("Haskell binary to run isomorhpic HTTP frontend")
+        name.set("frontend")
+        description.set("Haskell binary to run isomorhpic HTTP frontend + Haskell-to-Javascript code that lets you run an isomorphic website")
         url.set("http://qwde.no")
         developers {
           developer {

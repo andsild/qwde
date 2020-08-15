@@ -59,8 +59,8 @@ pipeline {
           sh '''
             set +x # don't expose password
             token="$(cat /run/secrets/deploy-password)"
-            echo "Doing curl http://qwde.no:9000/hooks/qwde-deploy?token=..."
-            curl "http://qwde.no:9000/hooks/qwde-deploy?token=$token&service=qwdefrontend-download"
+            echo "Doing curl https://qwde.no/archiva/hooks/qwde-deploy?token=..."
+            curl "https://qwde.no/archiva/hooks/qwde-deploy?token=$token&service=qwdefrontend-download"
             set -x
             '''
         }
@@ -81,8 +81,8 @@ pipeline {
           sh '''
             set +x # don't expose password
             token="$(cat /run/secrets/deploy-password)"
-            echo "Doing curl http://qwde.no:9000/hooks/qwde-deploy?token=..."
-            curl "http://qwde.no:9000/hooks/qwde-deploy?token=$token&service=qwdebackend-download"
+            echo "Doing curl https://qwde.no/archiva/hooks/qwde-deploy?token=..."
+            curl "https://qwde.no/archiva/hooks/qwde-deploy?token=$token&service=qwdebackend-download"
             set -x
             '''
         }

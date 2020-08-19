@@ -29,20 +29,21 @@ library
     Haskell2010
 
 
-test-suite Utiltest
-  type: exitcode-stdio-1.0
-  other-modules:
-    Test.Data.Graph.Plotter
-  main-is:
-   TestMain.hs 
-  ghc-options:
-    -O2 -threaded -Wall
-  hs-source-dirs:
-    ., ./Test
-  build-depends:
-    base < 5
-    , containers
-    , heredoc
-    , HUnit
-  default-language:
-    Haskell2010
+-- test-suite Utiltest
+--   type: exitcode-stdio-1.0
+--   other-modules:
+--     Test.Data.Graph.Plotter
+--   main-is:
+--    TestMain.hs 
+--   ghc-options:
+--     -O2 -threaded -Wall
+--   hs-source-dirs:
+--     ., ./Test
+--   build-depends:
+--     base < 5
+--     , colour
+--     , containers
+--     , heredoc
+--     , HUnit
+--   default-language:
+--     Haskell2010

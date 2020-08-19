@@ -7,62 +7,50 @@ description = """
   Qwde frontend, reading stock data and presenting various functions through an isomorhpic HTTP site.
 """
 
-task<Exec>("build.qwdeserver") {
+task<Exec>("build.cabal.qwdeserver") {
   description = "build qwdeserver"
-  commandLine("cabal", "install", "--program-suffix=.bin", "qwdeserver", "--installdir=dist-newstyle/target", "--overwrite-policy=always")
-  inputs.files(fileTree("./qwdeserver"))
+  commandLine("nix-build")
+  inputs.files(fileTree("./qwdeserver"), fileTree("./qwdeclient"), fileTree("./qwdeutil"), , fileTree("./qwdeshared"))
     .withPropertyName("sourceFiles")
     .withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.dir("./dist-newstyle/target/")
-}
-
-task<Exec>("build.qwdeclient") {
-  description = "build stuff"
-  commandLine("cabal", "build", "--ghcjs", "qwdeclient")
-  inputs.files(fileTree("./qwdeclient"))
-    .withPropertyName("sourceFiles")
-    .withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.dir("./dist-newstyle/target")
+  outputs.dir("./result-5/bin/")
 }
 
 task("build") {
   dependsOn(tasks.withType<Exec>())
 }
 
-
 task<Tar>("zipper") {
-  dependsOn("build.qwdeserver")
-  dependsOn("build.qwdeclient")
+  dependsOn("build.cabal.qwdeserver")
   compression = Compression.GZIP
-  from("./dist-newstyle/") {
+  from("./") {
     includeEmptyDirs = false
-    include(setOf("**/qwdeserver/build/qwdeserver/qwdeserver", "**/qwdeclient/qwdeclient.jsexe/all.js"))
+    include(setOf("*result-5/bin/qwdeserver", "result-4/bin/qwdeclient.jsexe/all.js"))
 
-    filesMatching("**/qwdeserver/build/qwdeserver/qwdeserver") {
+    filesMatching("*qwdeserver") {
       path = "qwdefrontend/"
       name = "qwdefrontend/qwdeserver.bin"
       }
-    filesMatching("**/qwdeclient/qwdeclient.jsexe/all.js") {
+    filesMatching("**all.js") {
       path = "qwdefrontend/"
       name = "qwdefrontend/all.js"
       }
   }
   into("qwdefrontend")
   setArchiveName("qwdefrontend.tar.gz")
-  setDestinationDir(File("dist-newstyle/target/"))
+  setDestinationDir(File("target/"))
 }
 
-val exec = file("dist-newstyle/target/qwdefrontend.tar.gz")
 val haskell by configurations.creating
-val artifact = artifacts.add("haskell", exec) {
+val repoUser: String? by project
+val repoPassword: String? by project
+val artifact = artifacts.add("haskell", file("target/qwdefrontend.tar.gz")) {
   type = "tarball"
-  builtBy("build.qwdeserver")
+  builtBy("zipper")
   classifier = "prod"
   extension = "tar.gz"
   name = "qwdeserver"
 }
-val repoUser: String by project
-val repoPassword: String by project
 
 publishing {
   publications {
@@ -87,7 +75,7 @@ publishing {
   }
   repositories {
     maven {
-      url = uri("http://qwde.no:8876/repository/internal/")
+      url = uri("https://qwde.no/archiva/repository/internal/")
       credentials {
           // Store in ~/.gradle/gradle.properties
           username = "admin"

@@ -1,3 +1,4 @@
+frontend/result*
 dist-newstyle/
 *.db
 target/

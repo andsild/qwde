@@ -39,12 +39,15 @@ pipeline {
       steps {
         dir("${env.WORKSPACE}/frontend") {
           sh '''
-            rm -rv /tmp/qwdefrontend || true
-            mkdir /tmp/qwdefrontend
+            rm -rv target || true
+            mkdir target
             docker build -t qwdefrontend:jenkins .
             id=$(docker create qwdefrontend:jenkins)
-            docker cp $id:/qwde/result-5/bin/qwdeserver /tmp/qwdefrontend/
+            docker cp $id:/qwde/result-5/bin/qwdeserver target/qwdeserver.bin
+            docker cp $id:/qwde/result-4/bin/qwdeclient.jsexe/all.js target/all.js
             docker rm -v $id
+            cd target/
+            tar -czvf qwdefrontend.tar.gz all.js qwdeserver.bin
           '''
         }
       }

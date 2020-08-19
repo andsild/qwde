@@ -32,7 +32,6 @@ val repoUser: String? by project
 val repoPassword: String? by project
 val artifact = artifacts.add("haskell", file("target/qwdefrontend.tar.gz")) {
   type = "tarball"
-  builtBy("zipper")
   classifier = "prod"
   extension = "tar.gz"
   name = "qwdeserver"

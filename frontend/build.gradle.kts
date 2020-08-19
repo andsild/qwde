@@ -10,7 +10,7 @@ description = """
 task<Exec>("build.cabal.qwdeserver") {
   description = "build qwdeserver"
   commandLine("nix-build")
-  inputs.files(fileTree("./qwdeserver"), fileTree("./qwdeclient"), fileTree("./qwdeutil"), , fileTree("./qwdeshared"))
+  inputs.files(fileTree("./qwdeserver"), fileTree("./qwdeclient"), fileTree("./qwdeutil"), fileTree("./qwdeshared"))
     .withPropertyName("sourceFiles")
     .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir("./result-5/bin/")
@@ -20,25 +20,10 @@ task("build") {
   dependsOn(tasks.withType<Exec>())
 }
 
-task<Tar>("zipper") {
+task<Exec>("zipper") {
   dependsOn("build.cabal.qwdeserver")
-  compression = Compression.GZIP
-  from("./") {
-    includeEmptyDirs = false
-    include(setOf("*result-5/bin/qwdeserver", "result-4/bin/qwdeclient.jsexe/all.js"))
-
-    filesMatching("*qwdeserver") {
-      path = "qwdefrontend/"
-      name = "qwdefrontend/qwdeserver.bin"
-      }
-    filesMatching("**all.js") {
-      path = "qwdefrontend/"
-      name = "qwdefrontend/all.js"
-      }
-  }
-  into("qwdefrontend")
-  setArchiveName("qwdefrontend.tar.gz")
-  setDestinationDir(File("target/"))
+  commandLine("/usr/bin/env")
+  args("bash", "-c", "./makeZip.sh")
 }
 
 val haskell by configurations.creating
@@ -62,7 +47,7 @@ publishing {
       pom {
         name.set("frontend")
         description.set("Haskell binary to run isomorhpic HTTP frontend + Haskell-to-Javascript code that lets you run an isomorphic website")
-        url.set("http://qwde.no")
+        url.set("https://qwde.no")
         developers {
           developer {
             id.set("andsild")
@@ -84,4 +69,3 @@ publishing {
     }
   }
 }
-

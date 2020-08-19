@@ -37,18 +37,15 @@ pipeline {
         changeset "frontend/**"
       }
       steps {
-        sh '''
-          rm -rv /tmp/qwdefrontend || true
-          mkdir /tmp/qwdefrontend
-          docker build -t qwdefrontend:jenkins .
-          id=$(docker create qwdefrontend:jenkins)
-          docker cp $id:/qwde/result-5/bin/qwdeserver /tmp/qwdefrontend.
-          docker rm -v $id
-        '''
         dir("${env.WORKSPACE}/frontend") {
-          withGradle {
-            sh './gradlew build --info'
-          }
+          sh '''
+            rm -rv /tmp/qwdefrontend || true
+            mkdir /tmp/qwdefrontend
+            docker build -t qwdefrontend:jenkins .
+            id=$(docker create qwdefrontend:jenkins)
+            docker cp $id:/qwde/result-5/bin/qwdeserver /tmp/qwdefrontend/
+            docker rm -v $id
+          '''
         }
       }
     }

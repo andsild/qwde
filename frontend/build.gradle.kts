@@ -21,7 +21,8 @@ task("build") {
 }
 
 task<Exec>("zipper") {
-  dependsOn("build.cabal.qwdeserver")
+  //dependsOn("build.cabal.qwdeserver")
+  // Depends on jenkinsfile.. guh
   commandLine("/usr/bin/env")
   args("bash", "-c", "./makeZip.sh")
 }

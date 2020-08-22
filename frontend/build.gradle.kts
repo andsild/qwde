@@ -2,7 +2,7 @@ plugins {
   `maven-publish`
 }
 
-version = "0.0.1"
+version = "0.0.alpha"
 description = """
   Qwde frontend, reading stock data and presenting various functions through an isomorhpic HTTP site.
 """

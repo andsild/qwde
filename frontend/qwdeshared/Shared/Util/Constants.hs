@@ -8,7 +8,7 @@ githubUrl :: MisoString
 githubUrl = toMisoString "https://github.com/andsild/qwde"
 
 misoSrc :: MisoString
-misoSrc = toMisoString "/static/Creative-Tail-Animal-cat.svg"
+misoSrc = toMisoString "https://upload.wikimedia.org/wikipedia/commons/3/3c/Creative-Tail-Animal-cat.svg"
 
 defaultColor :: Colour Double
 defaultColor = black

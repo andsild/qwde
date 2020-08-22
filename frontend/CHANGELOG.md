@@ -1,5 +1,5 @@
 # Revision history for 
 
-## 0.1.0.0 -- YYYY-mm-dd
+## 0.0.0.alha -- 2020-08-22
 
-* First version. Released on an unsuspecting world.
+* First version. Nothing works. WIP

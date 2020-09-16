@@ -159,7 +159,7 @@ footer =
               [ text "dmjio" ]
         , br_ []
         , br_ []
-         ,  text "The source code for this website is located "
+         ,  text "Source of this website is located "
                  , a_ [ href_  githubUrl
                       , style_ $ M.singleton "color" "#363636"
                       ] [  text" here."]

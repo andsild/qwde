@@ -39,12 +39,13 @@ pipeline {
       steps {
         dir("${env.WORKSPACE}/frontend") {
           sh '''
+            docker image inspect qwdefrontend:jenkinsdeps >/dev/null 2>&1 || docker build -t qwdefrontend:jenkinsdeps . -f Dockerfile_build
             rm -rv target || true
             mkdir target
             docker build -t qwdefrontend:jenkins .
             id=$(docker create qwdefrontend:jenkins)
-            docker cp $id:/qwde/result-5/bin/qwdeserver target/qwdeserver.bin
-            docker cp $id:/qwde/result-4/bin/qwdeclient.jsexe/all.js target/all.js
+            docker cp $id:/qwde/result-2/bin/qwdeserver target/qwdeserver.bin
+            docker cp $id:/qwde/result/bin/qwdeclient.jsexe/all.js target/all.js
             docker rm -v $id
             cd target/
             tar -czvf qwdefrontend.tar.gz all.js qwdeserver.bin

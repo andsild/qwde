@@ -99,7 +99,6 @@ serverHandlers ::
   :<|> Handler (Wrapper (View Action))
 serverHandlers = homeHandler :<|> smaHandler :<|> bollingerHandler
      where
-       --send f u = pure $ Wrapper $ f initialModel { uri = u }
        send f u = do
          im <- liftIO initialModel
          pure $ Wrapper $ f im { uri = u }

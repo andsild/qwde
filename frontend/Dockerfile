@@ -1,4 +1,4 @@
-FROM qwdefrontend:stage
+FROM qwdefrontend:deps
 ADD qwdeclient/ /qwde/qwdeclient
 ADD qwdeserver/ /qwde/qwdeserver/ 
 ADD qwdeshared/ /qwde/qwdeshared

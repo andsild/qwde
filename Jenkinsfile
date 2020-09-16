@@ -39,7 +39,7 @@ pipeline {
       steps {
         dir("${env.WORKSPACE}/frontend") {
           sh '''
-            docker image inspect qwdefrontend:jenkinsdeps >/dev/null 2>&1 || docker build -t qwdefrontend:jenkinsdeps . -f Dockerfile_build
+            docker image inspect qwdefrontend:deps >/dev/null 2>&1 || docker build -t qwdefrontend:deps . -f Dockerfile_build
             rm -rv target || true
             mkdir target
             docker build -t qwdefrontend:jenkins .

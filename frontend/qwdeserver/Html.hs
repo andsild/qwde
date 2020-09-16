@@ -9,7 +9,6 @@ import qualified            Data.Graph.Plotter as P
 import Shared.Util.Constants (plotHeight, plotWidth)
 
 -- | Wrapper for setting HTML doctype and header
--- yeah
 newtype Wrapper a = Wrapper a
   deriving (Show, Eq)
 

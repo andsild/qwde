@@ -15,7 +15,7 @@ RUN nix-env -iA \
 
 RUN nix-env -iA cachix -f https://cachix.org/api/v1/install
 RUN SYSTEM_CERTIFICATE_PATH=$NIX_SSL_CERT_FILE USER=miso cachix use miso-haskell
-COPY *.nix cabal.project hie.yaml Setup.hs /qwde/
+COPY shell.nix release.nix dependencies.nix cabal.project hie.yaml Setup.hs /qwde/
 COPY nix/ /qwde/nix/
 WORKDIR /qwde/
 RUN nix-build dependencies.nix

@@ -88,7 +88,7 @@ forwardRequest req = do
   where
     strippedApiPrefix = Prelude.foldl (\l r -> C8.append l $ C8.cons '/' r) (C8.pack "") (map E.encodeUtf8 $ pathInfo req)
 
-handle404 :: Application -- type Application = Request -> (Response -> IO ResponseReceived) -> IO ResponseReceived
+handle404 :: Application
 handle404 _ respond = do
   im <- liftIO initialModel
   respond $ let v = the404 im in responseLBS status404 [("Content-Type", "text/html")] $ renderBS $ toHtml $ Wrapper $ v

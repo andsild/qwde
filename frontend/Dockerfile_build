@@ -1,4 +1,5 @@
 FROM lnl7/nix:2.3.3
+# If you change this on qwde.no, rebuild the image manually with docker build -t qwdefrontend:deps . -f Dockerfile_build
 
 RUN nix-env -iA \
         nixpkgs.curl \

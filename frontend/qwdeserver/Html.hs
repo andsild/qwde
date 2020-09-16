@@ -20,9 +20,6 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
       L.html_ [ L.lang_ "en" ] $ do
         L.head_ $ do
           L.title_ "qwde"
-          L.link_ [ L.rel_ "stylesheet"
-                  , L.href_ "https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
-                  ]
           L.link_ [ L.rel_ "manifest"
                   , L.href_ "/manifest.json"
                   ]

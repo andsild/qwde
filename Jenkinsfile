@@ -44,8 +44,8 @@ pipeline {
             mkdir target
             docker build -t qwdefrontend:jenkins .
             id=$(docker create qwdefrontend:jenkins)
-            docker cp $id:/qwde/result-2/bin/qwdeserver target/qwdeserver.bin
-            docker cp $id:/qwde/result/bin/qwdeclient.jsexe/all.js target/all.js
+            docker cp $id:/qwde/qwdeserver/bin/qwdeserver target/qwdeserver.bin
+            docker cp $id:/qwde/qwdeclient/bin/qwdeclient.jsexe/all.js target/all.js
             docker rm -v $id
             cd target/
             tar -czvf qwdefrontend.tar.gz all.js qwdeserver.bin

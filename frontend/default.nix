@@ -33,4 +33,5 @@ in
   inherit release;
   
   qwdeclient = pkgs.haskell.packages.ghcjs.qwdeclient;
+  qwdeserver = pkgs.haskell.packages.ghc865.qwdeserver;
 } 

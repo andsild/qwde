@@ -20,17 +20,10 @@ let
         crossOverlays;
     };
   pkgs = import ./nix options;
-  deps = import ./dependencies.nix {};
-  release =
-    with deps.miso-ghc;
-    with deps.miso-ghcjs;
-    with pkgs.haskell.lib;
-    with pkgs.haskell.packages.ghc865;
-    sdistTarball (buildStrictly qwdeserver);
 in
 {
-  inherit deps;
-  inherit release;
-  
-  qwdeclient = pkgs.haskell.packages.ghcjs.qwdeclient;
+  inherit pkgs;
+  miso-ghcjs = pkgs.haskell.packages.ghcjs86.miso;
+  miso-ghc = pkgs.haskell.packages.ghc865.miso;
+  inherit (pkgs.haskell.packages.ghc865) miso-jsaddle;
 } 

@@ -1,25 +1,9 @@
-FROM lnl7/nix:2.3.3 
-
-RUN nix-env -iA \
-        nixpkgs.curl \
-        nixpkgs.jq \
-        nixpkgs.git \
-        nixpkgs.gnutar \
-        nixpkgs.gzip \
-        # get ca certificates for connecting to cachix
-        nixpkgs.libressl \
-        # install ag and entr for auto-rebuild
-        nixpkgs.silver-searcher \
-        nixpkgs.entr \
-        nixpkgs.cabal-install
-
-RUN nix-env -iA cachix -f https://cachix.org/api/v1/install
-RUN SYSTEM_CERTIFICATE_PATH=$NIX_SSL_CERT_FILE USER=miso cachix use miso-haskell
+FROM qwdefrontend:stage
 ADD qwdeclient/ /qwde/qwdeclient
 ADD qwdeserver/ /qwde/qwdeserver/ 
 ADD qwdeshared/ /qwde/qwdeshared
 ADD qwdeutil /qwde/qwdeutil/
 ADD nix/ /qwde/nix/
-ADD LICENSE README.md *.nix cabal.project hie.yaml Setup.hs /qwde/
+ADD LICENSE README.md /qwde/
 WORKDIR /qwde/
 RUN nix-build

@@ -92,10 +92,7 @@ middle =
                       ],
                   p_ [class_   "title is-4"] [
                      strong_ [] [ text  "Fast"]
-                  ],
-                  p_ [class_   "subtitle"] [
-                        text  "Virtual DOM diffing algorithm"
-                      ]
+                  ]
                   ]
 
               , a_ [ class_   "column has-text-centered"

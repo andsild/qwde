@@ -82,20 +82,7 @@ middle =
     div_ [class_ "hero-body"] [
       div_ [class_ "container"] [
         nav_ [class_ "columns"] [
-               a_ [ class_ "column has-text-centered"
-                   , href_ "https://rawgit.com/krausest/js-framework-benchmark/master/webdriver-ts-results/table.html"
-                   , target_ "_blank"
-                   , rel_ "noopener"
-                   ] [
-                  span_ [class_   "icon is-large"] [
-                      i_ [class_   "fa fa-flash"] [ ]
-                      ],
-                  p_ [class_   "title is-4"] [
-                     strong_ [] [ text  "Fast"]
-                  ]
-                  ]
-
-              , a_ [ class_   "column has-text-centered"
+              a_ [ class_   "column has-text-centered"
                    , href_  "https://en.wikipedia.org/wiki/Isomorphic_JavaScript"
                    , target_ "_blank"
                    , rel_ "noopener"

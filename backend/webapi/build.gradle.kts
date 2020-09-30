@@ -16,8 +16,9 @@ version = "0.0.1"
 description = """\
 Qwde backend, reading stock data and presenting various functions through a REST-api.
 """
-val micronautVersion by extra("1.3.3")
-val jacksonVersion by extra("2.10.3")
+val micronautVersion by extra("2.0.2")
+val swaggerNaut by extra("1.5.3")
+val jacksonVersion by extra("2.11.2")
 
 // Tablesaw and micronaut competes for a jackson version, apparently
 configurations.all {
@@ -32,7 +33,6 @@ configurations.all {
 
 dependencies {
     implementation("commons-io:commons-io:2.6")
-    implementation("info.picocli:picocli:3.9.5")
     implementation("io.prometheus:simpleclient_httpserver:0.6.0")
     implementation("io.prometheus:simpleclient_servlet:0.0.11")
     implementation("org.freemarker:freemarker:2.3.29")
@@ -45,9 +45,9 @@ dependencies {
     api(project(":trading"))
 
     annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    annotationProcessor("io.micronaut:micronaut-inject-java:$micronautVersion")
-    annotationProcessor("io.micronaut:micronaut-validation:$micronautVersion")
-    annotationProcessor("io.micronaut.configuration:micronaut-openapi:1.4.1")
+    annotationProcessor("io.micronaut:micronaut-inject-java")
+    annotationProcessor("io.micronaut:micronaut-validation")
+    annotationProcessor("io.micronaut.configuration:micronaut-openapi:$swaggerNaut")
     compileOnly("io.swagger.core.v3:swagger-annotations")
     implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
     implementation("io.micronaut:micronaut-inject:$micronautVersion")
@@ -56,11 +56,14 @@ dependencies {
     implementation("io.micronaut:micronaut-http-server-netty:$micronautVersion")
     implementation("io.micronaut:micronaut-http-client:$micronautVersion")
     implementation("io.micronaut:micronaut-management:$micronautVersion")
-    implementation("io.micronaut.configuration:micronaut-picocli:1.2.1")
-    implementation("javax.annotation:javax.annotation-api:1.3.2") // https://docs.micronaut.io/latest/guide/languageSupport.html#java9
+    implementation("info.picocli:picocli")
+    implementation("io.micronaut.picocli:micronaut-picocli:2.1.1")
+    //implementation("javax.annotation:javax.annotation-api:1.3.2") // https://docs.micronaut.io/latest/guide/languageSupport.html#java9
 
-    testAnnotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
-    testAnnotationProcessor("io.micronaut:micronaut-inject-java:$micronautVersion")
+    implementation("io.micronaut.cache:micronaut-cache-caffeine:2.1.0")
+
+    testAnnotationProcessor(enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion"))
+    testAnnotationProcessor("io.micronaut:micronaut-inject-java")
     testImplementation("io.micronaut.test:micronaut-test-junit5")
 }
 

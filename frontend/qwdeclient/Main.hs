@@ -56,7 +56,7 @@ main = do
             Right v -> v
 
 backend :: String
-backend = "http://localhost:8083/api/"
+backend = "http://localhost:8083/"
 
 getQwdeRandom :: IO QwdeRandom
 getQwdeRandom = do

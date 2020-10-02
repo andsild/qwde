@@ -1,9 +1,11 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveDataTypeable  #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 module Main where
@@ -32,7 +34,7 @@ import           Network.Wai.Handler.Warp (run)
 import           Network.Wai.Middleware.Gzip (gzipFiles, gzip, def, GzipFiles (GzipCompress))
 import           Network.Wai.Middleware.RequestLogger (logStdout)
 import           Servant (Handler, (:<|>), (:<|>)(..), Tagged(..), Raw, (:>), Get, JSON, serveDirectoryWith, serve, QueryParam, ServerT)
-import Servant.Client (client, Scheme(Http), BaseUrl(..), ClientM, runClientM, mkClientEnv)
+import Servant.Client (client, Scheme(Http), ClientM, runClientM)
 import Network.HTTP.Client (newManager, defaultManagerSettings)
 import qualified System.IO                            as IO
 import Html
@@ -40,31 +42,44 @@ import Manifest
 import Miso (ToServerRoutes, View)
 import           Lucid.Base (toHtml, renderBS)
 import qualified Data.ByteString.Char8 as C8
-import qualified Data.Text as T
 import qualified Data.Text.Encoding as E
+
+import           qualified System.Console.CmdArgs as CA
+
+
+data Options = Options
+  { port :: Int
+  , backendPort :: Int
+  } deriving (CA.Data, CA.Typeable, Show)
 
 main :: IO ()
 main = do
-  IO.hPutStrLn IO.stderr "Running on port 8081..."
+  Options {..} <-
+    CA.cmdArgs $
+    Options
+    { 
+      port = (8081 :: Int) CA.&= CA.help "Port to run on" :: Int
+    , backendPort = (8083 :: Int) CA.&= CA.help "Port the backend is running on" :: Int
+    } CA.&=
+    CA.summary "test"
+
+  IO.hPutStrLn IO.stderr $ "Running on port " ++ show port ++ " , backend as " ++ show backendPort
   manager <- newManager defaultManagerSettings
-  res <- runClientM queries (mkClientEnv manager (BaseUrl Http "localhost" 8080 ""))
-  run 8081 $ logStdout (compress (app manager))
+  --res <- runClientM queries (mkClientEnv manager (BaseUrl Http "localhost" backendPort ""))
+  run port $ logStdout (compress (app manager backendPort))
     where
       compress = gzip def { gzipFiles = GzipCompress }
 
-queries :: ClientM Tickers
-queries = getTicker
+queries :: ClientM Tickers :<|> ClientM [Double]
+queries = client gatewayApi
 newtype Tickers = Tickers { ticks :: [Ticker] } deriving (Show, Generic)
 instance FromJSON Tickers
-type GatewayAPI = "tickers" :> Get '[JSON] Tickers
+type GatewayAPI = ("tickers" :> Get '[JSON] Tickers) :<|> ("random" :> Get '[JSON] [Double] ) :<|> ("sma" :> QueryParam "ticker" String :> QueryParam "fromDate" :>  Get '[JSON] [Double]))
 gatewayApi :: Proxy GatewayAPI
 gatewayApi = Proxy
 
-getTicker :: ClientM Tickers
-getTicker = client gatewayApi
-
-app :: Manager -> Application
-app manager = serve (Proxy @ API) (static :<|> serverHandlers :<|> pure misoManifest :<|> (forwardServer manager) :<|> (Tagged handle404))
+app :: Manager -> Int -> Application
+app manager backendPort = serve (Proxy @ API) (static :<|> serverHandlers :<|> pure misoManifest :<|> (forwardServer manager backendPort) :<|> (Tagged handle404))
   where
     static = serveDirectoryWith (defaultWebAppSettings "static")
 
@@ -78,13 +93,16 @@ type API = ("static" :> Raw)
   :<|> "api" :> Raw
   :<|> Raw
 
-forwardServer :: Manager -> ServerT Raw m
-forwardServer manager = Tagged $ waiProxyTo forwardRequest defaultOnExc manager
+forwardServer :: Manager -> Int -> ServerT Raw m
+forwardServer manager backendPort = Tagged $ waiProxyTo (\req -> forwardRequest req backendPort) defaultOnExc manager
 
-forwardRequest :: Request -> IO WaiProxyResponse
-forwardRequest req = do
+forwardRequest :: Request -> Int -> IO WaiProxyResponse
+forwardRequest req backendPort = do
   putStrLn $ show req
-  pure (WPRModifiedRequest (req { rawPathInfo = strippedApiPrefix }) (ProxyDest "127.0.0.1" 8080))
+  putStrLn $ show req
+  putStrLn $ show req
+  putStrLn $ show req
+  pure (WPRModifiedRequest (req { rawPathInfo = strippedApiPrefix }) (ProxyDest "127.0.0.1" backendPort))
   where
     strippedApiPrefix = Prelude.foldl (\l r -> C8.append l $ C8.cons '/' r) (C8.pack "") (map E.encodeUtf8 $ pathInfo req)
 

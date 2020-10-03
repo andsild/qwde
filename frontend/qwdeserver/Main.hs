@@ -76,6 +76,7 @@ instance FromJSON SmaApi
 data RandomApi = RandomApi { numbers :: [Double] } deriving (Show, Generic)
 instance FromJSON RandomApi
 
+-- not used.. yet
 type GatewayAPI = "tickers" :> Get '[JSON] Tickers
   :<|> "random" :> Get '[JSON] RandomApi 
   :<|> "sma" :> QueryParam "ticker" String :> QueryParam "fromDate" :>  Get '[JSON] SmaApi 

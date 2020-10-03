@@ -59,7 +59,7 @@ main = do
     Options
     { 
       port = (8081 :: Int) CA.&= CA.help "Port to run on" :: Int
-    , backendPort = (8083 :: Int) CA.&= CA.help "Port the backend is running on" :: Int
+    , backendPort = (8083 :: Int) CA.&= CA.help "Port the backend (qwde) is running on" :: Int
     } CA.&=
     CA.summary "test"
 

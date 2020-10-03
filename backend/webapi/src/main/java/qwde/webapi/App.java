@@ -47,7 +47,7 @@ import java.util.concurrent.Callable;
         }
 )
 @Command(name = "qwde stuff", mixinStandardHelpOptions = true, version = "0.1",
-// Looks better in terminal. Backslashes has to be double, and dollar signs, too.
+// Looks better in terminal. Backslashes and dollar signs has to be double here...
         header = {
                 "@|green                               $$$$\\             |@",
                 "@|green                               $$$$ |            |@",

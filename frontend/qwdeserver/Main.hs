@@ -65,16 +65,20 @@ main = do
 
   IO.hPutStrLn IO.stderr $ "Running on port " ++ show port ++ " , backend as " ++ show backendPort
   manager <- newManager defaultManagerSettings
-  --res <- runClientM queries (mkClientEnv manager (BaseUrl Http "localhost" backendPort ""))
   run port $ logStdout (compress (app manager backendPort))
     where
       compress = gzip def { gzipFiles = GzipCompress }
 
-queries :: ClientM Tickers :<|> ClientM [Double]
-queries = client gatewayApi
 newtype Tickers = Tickers { ticks :: [Ticker] } deriving (Show, Generic)
 instance FromJSON Tickers
-type GatewayAPI = ("tickers" :> Get '[JSON] Tickers) :<|> ("random" :> Get '[JSON] [Double] ) :<|> ("sma" :> QueryParam "ticker" String :> QueryParam "fromDate" :>  Get '[JSON] [Double]))
+data SmaApi = SmaApi { prices :: [Double],  sma  :: [[Double]] } deriving (Show, Generic)
+instance FromJSON SmaApi
+data RandomApi = RandomApi { numbers :: [Double] } deriving (Show, Generic)
+instance FromJSON RandomApi
+
+type GatewayAPI = "tickers" :> Get '[JSON] Tickers
+  :<|> "random" :> Get '[JSON] RandomApi 
+  :<|> "sma" :> QueryParam "ticker" String :> QueryParam "fromDate" :>  Get '[JSON] SmaApi 
 gatewayApi :: Proxy GatewayAPI
 gatewayApi = Proxy
 
@@ -99,9 +103,7 @@ forwardServer manager backendPort = Tagged $ waiProxyTo (\req -> forwardRequest 
 forwardRequest :: Request -> Int -> IO WaiProxyResponse
 forwardRequest req backendPort = do
   putStrLn $ show req
-  putStrLn $ show req
-  putStrLn $ show req
-  putStrLn $ show req
+  putStrLn $ "Hello world"
   pure (WPRModifiedRequest (req { rawPathInfo = strippedApiPrefix }) (ProxyDest "127.0.0.1" backendPort))
   where
     strippedApiPrefix = Prelude.foldl (\l r -> C8.append l $ C8.cons '/' r) (C8.pack "") (map E.encodeUtf8 $ pathInfo req)

@@ -78,6 +78,7 @@ getQwdeSma time = do
     Left s -> error s
     Right j -> pure j
   where
+    -- TODO: un-hardcode dates
     req t = Request { reqMethod = GET
                   , reqURI = pack (backend ++ "sma?ticker=" ++ "twtr" ++ "&fromDate=20150102&toDate=20170301")
                   , reqLogin = Nothing

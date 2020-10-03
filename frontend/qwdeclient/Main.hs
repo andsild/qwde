@@ -43,8 +43,6 @@ main = do
         initialAction = NoOp
         mountPoint = Nothing
         update = updateModel
-        --events = defaultEvents
-        --subs = [ uriSub C.HandleURI ]
         logLevel = DebugPrerender
         events = M.insert (pack "mousemove") False $
                  M.insert (pack "touchstart") False $

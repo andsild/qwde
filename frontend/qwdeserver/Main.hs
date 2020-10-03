@@ -104,7 +104,6 @@ forwardServer manager backendPort = Tagged $ waiProxyTo (\req -> forwardRequest 
 forwardRequest :: Request -> Int -> IO WaiProxyResponse
 forwardRequest req backendPort = do
   putStrLn $ show req
-  putStrLn $ "Hello world"
   pure (WPRModifiedRequest (req { rawPathInfo = strippedApiPrefix }) (ProxyDest "127.0.0.1" backendPort))
   where
     strippedApiPrefix = Prelude.foldl (\l r -> C8.append l $ C8.cons '/' r) (C8.pack "") (map E.encodeUtf8 $ pathInfo req)

@@ -67,7 +67,7 @@ header = div_ [ class_  "animated fadeIn" ] [
                                 ]
     ] [ text "qwde" ]
    , h2_ [ class_ "subtitle animated pulse" ] [
-    text "making lots of "
+    text "Work in (halted) progress. Making lots of "
     , a_ [ href_ "https://medium.com/startup-leadership/the-best-way-to-learn-something-make-a-lot-of-pots-7f4aa97e1d3a"
          , rel_ "noopener"
          , target_ "_blank"] [

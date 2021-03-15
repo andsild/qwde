@@ -16,7 +16,6 @@ set -xe
 cabal build --ghcjs qwdeclient 
 cabal build qwdeserver 
 
-
 clientfile="$(find dist-newstyle/ -name all.js -and -regex ".*qwdeclient.*" | head -n1)"
 cp -av "${clientfile}" "${serverdir}"/static
 cp -arv "${clientfile}" static/

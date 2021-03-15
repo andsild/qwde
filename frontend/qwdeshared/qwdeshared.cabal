@@ -24,6 +24,7 @@ library
     , Shared.Scene.Model
     , Shared.Scene.Routes
     , Shared.Util.Constants
+    , Shared.Util.Date
     , Shared.Util.Plot
     , Shared.Util.Web
   --other-modules: Page.Template
@@ -39,7 +40,30 @@ library
     , miso
     , network-uri
     , servant
+    , text
     , time
     , qwdeutil
+  default-language:
+    Haskell2010
+
+test-suite Sharedtest
+  type: exitcode-stdio-1.0
+  other-modules:
+    Shared.Util.Date
+    Test.Shared.Util.Date
+  main-is:
+   TestMain.hs 
+  ghc-options:
+    -O2 -threaded -Wall
+  hs-source-dirs:
+    ., ./Test
+  build-depends:
+    base < 5
+    , HUnit
+    , colour
+    , containers
+    , heredoc
+    , text
+    , time
   default-language:
     Haskell2010

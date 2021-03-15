@@ -13,10 +13,19 @@ import Miso.String hiding (map, zip)
 import qualified Data.Map as M
 import Data.Colour (Colour)
 
-drawPlot :: P.Plot -> [Char] -> Action -> View Action
-drawPlot plot name action = div_ [ class_  "content has-text-centered" ] ([
+drawPlot :: P.Plot -> [String] -> [Char] -> Action -> View Action
+drawPlot plot tickers name action = div_ [ class_  "content has-text-centered" ] ([
                 --div_ [ id_ . toMisoString $ (name ++ "cal") ] []
-                input_ [ type_ "date", onChange $ ParseFromdate ]
+                 "From date: "
+                 , input_ [ type_ "date", id_ "fromDatePicker", onChange $ ParseFromdate ]
+                 , " To date: "
+                 , input_ [ type_ "date", id_ "toDatePicker", onChange $ ParseTodate ]
+                 , " Instrument: "
+                 , select_ [] 
+                    [ 
+                      optgroup_ [ prop "label" (toMisoString ("Stock Tickers" :: String)) ] 
+                      (map (\x -> option_ [ value_ (toMisoString x) ] [ text (toMisoString x) ] ) tickers)
+                    ]
                  , div_ [ id_ . toMisoString $ (name ++ "id") ] [
                     SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
                          makeAxis True (P.xAxis plot)

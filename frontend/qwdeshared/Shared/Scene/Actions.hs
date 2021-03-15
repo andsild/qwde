@@ -17,20 +17,28 @@ data Action
   | ToggleNavMenu
   | GetBollinger
   | GetRandom
+  | GetTickers
   | GetSma
   | SetRandom QwdeRandom
   | SetSma QwdeSma
+  | SetTickers QwdeTickers
   | SetBollinger QwdeBollinger
   | HandleTouch TouchEvent
   | HandleMouse (Int, Int)
   | ParseFromdate MisoString
   | SetFromdate Time.Day
+  | ParseTodate MisoString
+  | SetTodate Time.Day
   | Init
   | NoOp
   deriving (Show, Eq)
 
 data QwdeRandom = QwdeRandom {
   numbers :: [Double]
+} deriving (Eq, Show, Generic)
+
+data QwdeTickers = QwdeTickers {
+  ticks :: [String]
 } deriving (Eq, Show, Generic)
 
 data QwdeSma = QwdeSma {
@@ -51,7 +59,11 @@ instance FromJSON QwdeSma where
   parseJSON = genericParseJSON defaultOptions
 instance FromJSON QwdeBollinger where
   parseJSON = genericParseJSON defaultOptions
+instance FromJSON QwdeTickers where
+  parseJSON = genericParseJSON defaultOptions
 instance ToJSON QwdeRandom where
+  toJSON = genericToJSON defaultOptions
+instance ToJSON QwdeTickers where
   toJSON = genericToJSON defaultOptions
 instance ToJSON QwdeSma where
   toJSON = genericToJSON defaultOptions

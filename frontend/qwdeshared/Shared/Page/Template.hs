@@ -146,11 +146,7 @@ footer =
               [ text "dmjio" ]
         , br_ []
         , br_ []
-         ,  text "Source of this website is located "
-                 , a_ [ href_  githubUrl
-                      , style_ $ M.singleton "color" "#03b1fc"
-                      ] [  text" here."]
-                 ]
+          ]
          , p_ [] [ a_ [href_"https://bulma.io"] [ img_
                                                     [ src_ "https://bulma.io/images/made-with-bulma.png"
                                                     , alt_ "Made with Bulma"

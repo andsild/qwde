@@ -1,17 +1,47 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes, OverloadedStrings #-}
 module Html where
 
+import qualified Data.Text as Text
 import qualified Lucid                                as L
 import           Lucid.Base (toHtml, makeAttribute)
 import           Miso()
 import           Miso.String hiding (map)
 import qualified            Data.Graph.Plotter as P
 import Shared.Util.Constants (plotHeight, plotWidth)
+import Text.Heredoc 
 
 -- | Wrapper for setting HTML doctype and header
 -- yeah
 newtype Wrapper a = Wrapper a
   deriving (Show, Eq)
+
+customJavascript :: Text.Text
+customJavascript = Text.pack [str|
+  | function loadScript(scriptUrl) {
+  |   const script = document.createElement('script');
+  |   script.src = scriptUrl;
+  |   document.body.appendChild(script);
+  |   
+  |   return new Promise((res, rej) => {
+  |     script.onload = function() {
+  |       res();
+  |     }
+  |     script.onerror = function () {
+  |       rej();
+  |     }
+  |   });
+  | };
+  | document.addEventListener('DOMContentLoaded', function () {
+  |   loadScript('https://cdn.jsdelivr.net/npm/flatpickr')
+  |   .then(() => {
+  |     flatpickr('#fromDatePicker', { "defaultDate": "2015-01-03", "minDate": "2015-01-03", "maxDate": "2017-03-01" });
+  |     flatpickr('#toDatePicker', { "defaultDate": "2017-03-01", "minDate": "2015-01-03", "maxDate": "2017-03-01" })
+  |   })
+  |   .catch(() => { 
+  |      console.error('Script loading of flatpickr failed');
+  |   })
+  | })
+  |] 
 
 instance L.ToHtml a => L.ToHtml (Wrapper a) where
   toHtmlRaw = L.toHtml
@@ -46,7 +76,8 @@ instance L.ToHtml a => L.ToHtml (Wrapper a) where
           cssRef flatpickrRef
           jsRef "https://buttons.github.io/buttons.js"
           jsRef "/static/all.js"
-          jsRef "https://cdn.jsdelivr.net/npm/flatpickr"
+          --jsRef ""
+          L.script_ $ customJavascript
         L.body_ (L.toHtml x)
           where
             jsRef href =

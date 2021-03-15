@@ -20,7 +20,7 @@ public class Tickers {
     @Get()
     public HttpResponse<?> doGet() throws SQLException {
         Set<String> data = getTickers();
-        return HttpResponse.ok(data);
+        return HttpResponse.ok(ImmutableMap.of("tickers", data));
     }
 
     @Cacheable

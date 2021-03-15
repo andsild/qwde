@@ -13,10 +13,11 @@ import JavaScript.Web.XMLHttpRequest (Request(..), RequestData(..), xhrByteStrin
 import Miso hiding (defaultOptions)
 import Miso.String hiding (map, length, take, zip)
 import Servant.API ((:<|>), (:<|>)(..))
-import Shared.Scene.Actions (Action(..), QwdeRandom(..), QwdeSma(..), QwdeBollinger(..))
+import Shared.Scene.Actions (Action(..), QwdeRandom(..), QwdeSma(..), QwdeBollinger(..), QwdeTickers(..))
 import Shared.Scene.Model
 import Shared.Scene.Routes
 import Shared.Util.Constants (defaultColor, plotWidth, plotHeight)
+import Shared.Util.Date
 import Shared.Page.Home
 import Shared.Page.MissingPage
 import Shared.Page.Plots
@@ -27,13 +28,15 @@ import qualified Data.Time.Calendar as Time
 import qualified Data.Time.Format as Time
 import qualified Data.Time.Calendar as Time
 import qualified Data.Time.Clock as Time
+import Control.Applicative
 
 handlers :: (Model -> View Action) :<|> ((Model -> View Action) :<|> (Model -> View Action))
 handlers = home :<|> smaPage :<|> bollingerPage
 
 main :: IO ()
 main = do
-  initModel <- initialModel
+  tickList <- getTickerList
+  initModel <- initialModel tickList
   miso $ \_ -> App
     { model = initModel
     , view = viewModel
@@ -56,6 +59,21 @@ main = do
 backend :: String
 backend = "https://qwde.no/api/"
 
+getTickerList :: IO QwdeTickers
+getTickerList = do
+  Just resp <- contents <$> xhrByteString req
+  case eitherDecodeStrict resp :: Either String QwdeTickers of
+    Left s -> error s
+    Right j -> pure j
+  where
+    req = Request { reqMethod = GET
+                  , reqURI = pack (backend ++ "tickers")
+                  , reqLogin = Nothing
+                  , reqHeaders = []
+                  , reqWithCredentials = False
+                  , reqData = NoData
+                  }
+
 getQwdeRandom :: IO QwdeRandom
 getQwdeRandom = do
   Just resp <- contents <$> xhrByteString req
@@ -71,38 +89,39 @@ getQwdeRandom = do
                   , reqData = NoData
                   }
 
-getQwdeSma :: Time.Day -> IO QwdeSma
-getQwdeSma time = do
-  Just resp <- contents <$> xhrByteString (req time)
+getQwdeSma :: Time.Day -> Time.Day -> IO QwdeSma
+getQwdeSma fromTime toTime = do
+  Just resp <- contents <$> xhrByteString req
   case eitherDecodeStrict resp :: Either String QwdeSma of
     Left s -> error s
     Right j -> pure j
   where
-    -- TODO: un-hardcode dates
-    req t = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "sma?ticker=" ++ "twtr" ++ "&fromDate=20150102&toDate=20170301")
+    fmDate = dateToString fromTime
+    toDate = dateToString toTime
+    req = Request { reqMethod = GET
+                  , reqURI = pack (backend ++ "sma?ticker=" ++ "twtr" ++ "&fromDate=" ++ fmDate ++ "&toDate=" ++ toDate)
                   , reqLogin = Nothing
                   , reqHeaders = []
                   , reqWithCredentials = False
                   , reqData = NoData
                   }
 
-getQwdeBollinger :: IO QwdeBollinger
-getQwdeBollinger = do
+getQwdeBollinger :: Time.Day -> Time.Day -> IO QwdeBollinger
+getQwdeBollinger fromTime toTime = do
   Just resp <- contents <$> xhrByteString req
   case eitherDecodeStrict resp :: Either String QwdeBollinger of
     Left s -> error s
     Right j -> pure j
   where
+    fmDate = dateToString fromTime
+    toDate = dateToString toTime
     req = Request { reqMethod = GET
-                  , reqURI = pack (backend ++ "bb?ticker=twtr&fromDate=20150102&toDate=20170301")
+                  , reqURI = pack (backend ++ "bb?ticker=twtr&fromDate=" ++ fmDate ++ "&toDate=" ++ toDate)
                   , reqLogin = Nothing
                   , reqHeaders = [("Content-Type", "text/plain"), ("Accept-Language", "nb-NO,nb")]
                   , reqWithCredentials = False
                   , reqData = NoData
                   }
-parseStringDate :: String -> IO Time.Day
-parseStringDate s = undefined
 
 updateModel :: Action -> Model -> Effect Action Model
 updateModel (HandleURI u) m = m { uri = u } <# do
@@ -115,10 +134,9 @@ updateModel Alert m@Model{..} = m <# do
   pure NoOp
 updateModel ToggleNavMenu m@Model{..} = m { navMenuOpen = not navMenuOpen } <# do
   pure NoOp
-
---updateModel (Init) m@Model{..} = m <# do
-  --Flatpickr.viewModel (flatpickrIface $ m ^. mDate) $ m ^. mFlatpickr
-
+updateModel GetTickers m@Model{..} = m <# do
+  SetTickers <$> getTickerList
+updateModel (SetTickers apiData) m@Model{..} = noEff m { tickers = ticks apiData }
 updateModel GetRandom m@Model{..} = m <# do
   SetRandom <$> getQwdeRandom
 updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 10 plotWidth (plotHeight - 200)
@@ -127,16 +145,20 @@ updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 1
     [P.PlotLegend "random" defaultColor]
  }
 updateModel (ParseFromdate s) m@Model{..} = m <# do
-  SetFromdate <$> parseStringDate (show s)
+  SetFromdate <$> parseStringDate (fromMisoString s)
+updateModel (SetFromdate fmDate) m@Model{..} = noEff m { fromDate = fmDate }
+updateModel (ParseTodate s) m@Model{..} = m <# do
+  SetTodate <$> parseStringDate (fromMisoString s)
+updateModel (SetTodate tDate) m@Model{..} = noEff m { toDate = tDate }
 updateModel GetSma m@Model{..} = m <# do
-  SetSma <$> getQwdeSma fromDate
+  SetSma <$> getQwdeSma fromDate toDate
 updateModel (SetSma apiData) m@Model{..} = noEff m { smaPlot = P.getPlot 10 plotWidth (plotHeight - 200)
   (take (length $ prices apiData) $ map show ([1..] :: [Int]))
   ([prices apiData] ++ (sma apiData))
   ([P.PlotLegend "sma" defaultColor ] ++ (map (\(i,c) -> P.PlotLegend (show $ i * 10) c) $ take (length $ sma apiData) (zip ([1..] :: [Int]) colorList)))
    }
 updateModel GetBollinger m@Model{..} = m <# do
-  SetBollinger <$> getQwdeBollinger
+  SetBollinger <$> getQwdeBollinger fromDate toDate
 updateModel (SetBollinger apiData) m@Model{..} = noEff m { bollingerPlot = P.getPlot 10 plotWidth (plotHeight - 200)
   (take (length $ price apiData) $ map show ([1..] :: [Int]))
   [price apiData, lowerBand apiData, highBand apiData, mean apiData]

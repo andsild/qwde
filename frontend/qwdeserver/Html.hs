@@ -31,6 +31,7 @@ customJavascript = Text.pack [str|
   |     }
   |   });
   | };
+  | // On body load..
   | document.addEventListener('DOMContentLoaded', function () {
   |   loadScript('https://cdn.jsdelivr.net/npm/flatpickr')
   |   .then(() => {

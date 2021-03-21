@@ -5,7 +5,7 @@ import Control.Monad
 import qualified Test.Data.Graph.Plotter as Plotter
 import Test.HUnit
 import Test.HUnit.Text
-import System.Exit (exitFailure)
+import System.Exit (exitFailure, exitSuccess)
 
 -- | Convenience wrapper for 'runTestTT'.
 -- --   Simply runs 'runTestTT' and then exits back to the OS,

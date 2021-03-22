@@ -30,7 +30,7 @@ executable qwdeclient
       ghcjs-options: -dedupe -DGHCJS_GC_INTERVAL=5000 -Wall
   hs-source-dirs:
     .
-  other-modules: Widget.Flatpickr, Util.Color
+  other-modules: Util.Color
   build-depends:
     base < 5
     , aeson

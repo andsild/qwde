@@ -21,7 +21,7 @@ drawPlot plot tickers name action = div_ [ class_  "content has-text-centered" ]
                  , " To date: "
                  , input_ [ type_ "date", id_ "toDatePicker", onChange $ ParseTodate ]
                  , " Instrument: "
-                 , select_ [] 
+                 , select_ [ id_ "tickerPicker", onChange $ ParseSingleTicker ] 
                     [ 
                       optgroup_ [ prop "label" (toMisoString ("Stock Tickers" :: String)) ] 
                       (map (\x -> option_ [ value_ (toMisoString x) ] [ text (toMisoString x) ] ) tickers)
@@ -82,5 +82,3 @@ makeLegend pl name = div_ [id_ name] $ map (\l ->
        (pack "height", pack "20px"), (pack "width", pack "20px"), (pack "border", pack "2px solid")]] []
     , span_ [] [ text . toMisoString $ P.name l ]
   ] ) pl
-
-

@@ -4,7 +4,6 @@ module Main
 import Control.Monad
 import qualified Test.Shared.Util.Date as TDate
 import Test.HUnit
-import Test.HUnit.Text
 import System.Exit (exitSuccess, exitFailure)
 
 -- | Convenience wrapper for 'runTestTT'.

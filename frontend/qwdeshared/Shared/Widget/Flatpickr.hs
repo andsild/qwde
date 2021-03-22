@@ -1,2 +1,0 @@
-module Widget.Flatpickr where
-

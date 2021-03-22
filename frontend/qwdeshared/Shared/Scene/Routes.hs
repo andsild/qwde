@@ -6,13 +6,13 @@ module Shared.Scene.Routes where
 
 import Shared.Scene.Actions
 import Shared.Scene.Model
-import           Data.Proxy
+import Data.Proxy
 import Miso (View(..))
-import           Servant.API (URI(..), (:<|>), (:>), safeLink, (:<|>)(..))
+import Servant.API (URI(..), (:<|>), (:>), safeLink, (:<|>)(..))
 #if MIN_VERSION_servant(0,17,0)
-import          Servant.Links (linkURI)
+import Servant.Links (linkURI)
 #else
-import	  Servant.Utils.Links (linkURI)
+import Servant.Utils.Links (linkURI)
 #endif
 import Miso.String
 

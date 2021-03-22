@@ -2,13 +2,12 @@
 module Shared.Scene.Actions
   where
 
-import Data.Aeson (FromJSON, fieldLabelModifier, parseJSON, ToJSON(..), defaultOptions, camelTo2, genericParseJSON, genericToJSON)
-import           Servant.API (URI(..))
-import           Touch
+import Data.Aeson (FromJSON, parseJSON, ToJSON(..), defaultOptions, genericParseJSON, genericToJSON)
+import Servant.API (URI(..))
+import Touch
 import GHC.Generics (Generic)
 import Miso.String (MisoString)
 import qualified Data.Time.Calendar as Time
-import qualified Data.Time.Format as Time
 
 data Action
   = Alert
@@ -29,6 +28,8 @@ data Action
   | SetFromdate Time.Day
   | ParseTodate MisoString
   | SetTodate Time.Day
+  | ParseSingleTicker MisoString
+  | SetSingleTicker String
   | Init
   | NoOp
   deriving (Show, Eq)
@@ -38,7 +39,7 @@ data QwdeRandom = QwdeRandom {
 } deriving (Eq, Show, Generic)
 
 data QwdeTickers = QwdeTickers {
-  ticks :: [String]
+  tickers :: [String]
 } deriving (Eq, Show, Generic)
 
 data QwdeSma = QwdeSma {

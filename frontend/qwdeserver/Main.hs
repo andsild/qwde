@@ -19,10 +19,7 @@ import Shared.Scene.Routes
 import Util.Types.Ticker
 import Control.Monad.Trans (lift, liftIO)
 import           Data.Aeson (ToJSON, FromJSON)
-import Data.Char (toUpper)
-import Data.Maybe
 import           Data.Proxy (Proxy(..))
-import           Data.Text                            (Text)
 import           GHC.Generics (Generic(..))
 import Network.HTTP.ReverseProxy
 import Network.HTTP.Client (Manager, defaultManagerSettings, newManager)
@@ -69,7 +66,7 @@ main = do
     where
       compress = gzip def { gzipFiles = GzipCompress }
 
-newtype Tickers = Tickers { ticks :: [Ticker] } deriving (Show, Generic)
+newtype Tickers = Tickers { tickers :: [Ticker] } deriving (Show, Generic)
 instance FromJSON Tickers
 data SmaApi = SmaApi { prices :: [Double],  sma  :: [[Double]] } deriving (Show, Generic)
 instance FromJSON SmaApi

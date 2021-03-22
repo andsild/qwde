@@ -9,7 +9,7 @@ import qualified Data.Time.Calendar as Time
 import qualified Data.Time.Format as Time
 import qualified Data.Time.Clock as Time
 import           Data.Time.LocalTime ( LocalTime(..), getCurrentTimeZone, utcToLocalTime )
-import Shared.Scene.Actions
+import qualified Shared.Scene.Actions as Actions
 
 data Model = Model {
   uri :: URI
@@ -20,10 +20,11 @@ data Model = Model {
   , bollingerPlot :: P.Plot
   , fromDate :: Time.Day
   , toDate :: Time.Day
-  , tickers :: [String]
+  , ticks :: [String]
+  , singleTicker :: String
   } deriving (Eq, Show)
 
-initialModel :: QwdeTickers -> IO Model
+initialModel :: Actions.QwdeTickers -> IO Model
 initialModel tickList = do
   curTime <- Time.getCurrentTime
   timeZone <- getCurrentTimeZone
@@ -36,7 +37,8 @@ initialModel tickList = do
     (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
     (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
     fromDay toDay
-    (ticks tickList)
+    (Actions.tickers tickList)
+    "twtr"
     where
       uri = case parseURI "http://qwde.no" of
               Just n -> n

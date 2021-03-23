@@ -107,7 +107,7 @@ forwardRequest req backendPort = do
 
 handle404 :: Application
 handle404 _ respond = do
-  im <- liftIO (initialModel $ QwdeTickers [])
+  im <- liftIO initialModel
   respond $ let v = the404 im in responseLBS status404 [("Content-Type", "text/html")] $ renderBS $ toHtml $ Wrapper $ v
 
 serverHandlers ::
@@ -117,7 +117,7 @@ serverHandlers ::
 serverHandlers = homeHandler :<|> smaHandler :<|> bollingerHandler
      where
        send f u = do
-         im <- liftIO (initialModel $ QwdeTickers [])
+         im <- liftIO initialModel
          pure $ Wrapper $ f im { uri = u }
        homeHandler = send home goHome
        smaHandler = send smaPage goSma

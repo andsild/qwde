@@ -8,4 +8,3 @@ onPreventClick :: Action -> Attribute Action
 onPreventClick action =
   onWithOptions defaultOptions { preventDefault = True }
     (toMisoString "click") emptyDecoder (\() -> action)
-

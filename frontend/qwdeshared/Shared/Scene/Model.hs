@@ -22,10 +22,11 @@ data Model = Model {
   , toDate :: Time.Day
   , ticks :: [String]
   , singleTicker :: String
+  , dataLoaded :: Bool
   } deriving (Eq, Show)
 
-initialModel :: Actions.QwdeTickers -> IO Model
-initialModel tickList = do
+initialModel :: IO Model
+initialModel = do
   curTime <- Time.getCurrentTime
   timeZone <- getCurrentTimeZone
   let fromDay :: Time.Day
@@ -37,8 +38,9 @@ initialModel tickList = do
     (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
     (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
     fromDay toDay
-    (Actions.tickers tickList)
+    []
     "twtr"
+    False
     where
       uri = case parseURI "http://qwde.no" of
               Just n -> n

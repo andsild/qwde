@@ -30,16 +30,14 @@ handlers = home :<|> smaPage :<|> bollingerPage
 
 main :: IO ()
 main = do
-  --tickList <- getTickerList
-  --initModel <- initialModel tickList
-  initModel <- initialModel $ QwdeTickers { tickers = [ "twtr" ] }
+  initModel <- initialModel
   miso $ \_ -> App
     { model = initModel
     , view = viewModel
     , ..
     }
       where
-        initialAction = NoOp
+        initialAction = GetTickers
         mountPoint = Nothing
         update = updateModel
         logLevel = DebugPrerender
@@ -60,7 +58,7 @@ getTickerList = do
   Just resp <- contents <$> xhrByteString req
   case eitherDecodeStrict resp :: Either String QwdeTickers of
     Left s -> do
-      --_ <- error s
+      _ <- error s
       return QwdeTickers { tickers = [ "twtr" ] }
     Right j -> pure j
   where

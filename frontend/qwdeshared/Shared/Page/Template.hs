@@ -129,7 +129,6 @@ middle =
         ]
       ]
 
-
 -- | Footer
 footer :: View action
 footer =

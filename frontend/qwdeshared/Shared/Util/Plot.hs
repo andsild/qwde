@@ -14,19 +14,22 @@ import qualified Data.Map as M
 import Data.Colour (Colour)
 
 drawPlot :: P.Plot -> [String] -> [Char] -> Action -> View Action
-drawPlot plot tickers name action = div_ [ class_  "content has-text-centered" ] ([
+drawPlot plot tickers name action =
+  div_ [ class_  "content has-text-centered" ] ([
+                -- Not supposed to do this in haskell but hey ho
+                script_ [] (toMisoString ("document.dispatchEvent(new CustomEvent('QwdePlotLoad'))" :: String))
                 --div_ [ id_ . toMisoString $ (name ++ "cal") ] []
-                 "From date: "
-                 , input_ [ type_ "date", id_ "fromDatePicker", onChange $ ParseFromdate ]
-                 , " To date: "
-                 , input_ [ type_ "date", id_ "toDatePicker", onChange $ ParseTodate ]
-                 , " Instrument: "
-                 , select_ [ id_ "tickerPicker", onChange $ ParseSingleTicker ] 
+                , "From date: "
+                , input_ [ type_ "date", id_ "fromDatePicker", onChange $ ParseFromdate ]
+                , " To date: "
+                , input_ [ type_ "date", id_ "toDatePicker", onChange $ ParseTodate ]
+                , " Instrument: "
+                , select_ [ id_ "tickerPicker", onChange $ ParseSingleTicker ] 
                     [ 
                       optgroup_ [ prop "label" (toMisoString ("Stock Tickers" :: String)) ] 
                       (map (\x -> option_ [ value_ (toMisoString x) ] [ text (toMisoString x) ] ) tickers)
                     ]
-                 , div_ [ id_ . toMisoString $ (name ++ "id") ] [
+                , div_ [ id_ . toMisoString $ (name ++ "id") ] [
                     SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
                          makeAxis True (P.xAxis plot)
                          , makeAxis False (P.yAxis plot)

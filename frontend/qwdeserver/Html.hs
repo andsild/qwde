@@ -31,7 +31,7 @@ customJavascript = Text.pack [str|
   |     }
   |   });
   | };
-  | document.addEventListener('DOMContentLoaded', function () {
+  | document.addEventListener('QwdePlotLoad', function () {
   |   loadScript('https://cdn.jsdelivr.net/npm/flatpickr')
   |   .then(() => {
   |     flatpickr('#fromDatePicker', { "defaultDate": "2015-01-03", "minDate": "2015-01-03", "maxDate": "2017-03-01" });

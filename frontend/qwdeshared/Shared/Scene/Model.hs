@@ -27,12 +27,14 @@ data Model = Model {
 
 initialModel :: IO Model
 initialModel = do
-  curTime <- Time.getCurrentTime
-  timeZone <- getCurrentTimeZone
+  -- curTime <- Time.getCurrentTime
+  -- timeZone <- getCurrentTimeZone
   let fromDay :: Time.Day
-      (LocalTime fromDay _fromTimeOfDay) = utcToLocalTime timeZone curTime
+      --(LocalTime fromDay _fromTimeOfDay) = utcToLocalTime timeZone curTime
+      fromDay = Time.fromGregorian 2015 1 3
       toDay :: Time.Day
-      (LocalTime toDay _toTimeOfDay) = utcToLocalTime timeZone curTime
+      -- (LocalTime toDay _toTimeOfDay) = utcToLocalTime timeZone curTime
+      toDay = Time.fromGregorian 2017 2 28
 
   pure $ Model uri False (0,0) (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
     (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])

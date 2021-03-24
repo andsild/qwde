@@ -1,4 +1,4 @@
-module TestMain
+module Main
   where
 
 import Control.Monad
@@ -18,8 +18,8 @@ import System.Exit (exitFailure, exitSuccess)
 -- --   > main :: IO ()
 -- --   > main = runTestTTAndExit tests
 --
-runTestTTAndExit :: Test -> IO ()
-runTestTTAndExit tests = do
+runTestTTAndExit' :: Test -> IO ()
+runTestTTAndExit' tests = do
   c <- runTestTT tests
   if (errors c == 0) && (failures c == 0)
     then exitSuccess
@@ -28,6 +28,6 @@ runTestTTAndExit tests = do
 main :: IO ()
 main = do
   -- runTest[T]ext(to)[T]erminal
-  runTestTTAndExit $ TestList [
+  runTestTTAndExit' $ TestList [
     Plotter.tests
     ]

@@ -1,8 +1,9 @@
 # Qwde Backend
-The project reads closing-prices and info from the project [pystock-data](https://github.com/eliangcs/pystock-data), which is inserted into a database (sqlite). From there, we do simple analysis and present it using a websocket implementation combined with the all-powerful [plotly](https://plot.ly/) and [tablesaw](https://jtablesaw.github.io/tablesaw/). 
+The project reads closing-prices and info from the project [pystock-data](https://github.com/eliangcs/pystock-data), which is inserted into a database (sqlite). From there, we do simple analysis and present it as JSON.
 
 * `analytics` folder contains code for ML, analysis, etc.
 * `dataprovider` folder contains code for getting stock-data and making it available for other projects
+* `trading` folder contains code for artificial trading and selling stocks
 * `webapi` folder contains code for presenting views and running web server
 
 # Setup

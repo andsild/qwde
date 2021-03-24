@@ -37,8 +37,8 @@ initialModel = do
       toDay = Time.fromGregorian 2017 2 28
 
   pure $ Model uri False (0,0) (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
-    (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
-    (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
+    (P.getPlot 0 plotWidth plotHeight (map show ([] :: [Int])) [[]] [P.PlotLegend "" defaultColor])
+    (P.getPlot 0 plotWidth plotHeight (map show ([] :: [Int])) [[]] [P.PlotLegend "" defaultColor])
     fromDay toDay
     []
     "twtr"

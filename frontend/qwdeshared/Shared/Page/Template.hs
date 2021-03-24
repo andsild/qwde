@@ -18,8 +18,7 @@ template templateHeader content Model{..} =
   div_ [ ] ([
   hero templateHeader uri navMenuOpen
   ] ++ content ++ [
-  middle
-  , footer
+    footer
   ])
 
 -- | Hero
@@ -41,10 +40,13 @@ hero content uri' navMenuOpen' =
         ],
          div_ [ class_ $ "nav-right nav-menu " <> do  bool mempty "is-active" navMenuOpen'] headerlinks'
           ]]]
-    , div_ [ class_  "hero-body" ] [
-     div_ [ class_  "container" ] [
-           content
-         ]
+    , div_ [ class_  "hero-body" , style_ $ M.fromList [
+      (pack "padding-top", pack "1rem")
+      , (pack "padding-bottom", pack "2rem")
+      ]] [
+     div_ [ class_  "container"] [
+         content
+       ]
      ]
   ]
   where
@@ -64,76 +66,19 @@ header = div_ [ class_  "animated fadeIn" ] [
     , h1_ [ class_  "title animated pulse"
           , style_ $ M.fromList [(pack "font-size", pack "82px")
                                 ,(pack "font-weight", pack "100")
+                                ,(pack "display", pack "inline")
                                 ]
     ] [ text "qwde" ]
-   , h2_ [ class_ "subtitle animated pulse" ] [
-    text "Work in (halted) progress. Making lots of "
-    , a_ [ href_ "https://medium.com/startup-leadership/the-best-way-to-learn-something-make-a-lot-of-pots-7f4aa97e1d3a"
-         , rel_ "noopener"
-         , target_ "_blank"] [
-        strong_ [] [text "pots" ]]
-    , text  " for fun."
-    ]
   ]
-
-middle :: View Action
-middle =
-  section_ [class_ "hero" ] [
-    div_ [class_ "hero-body"] [
-      div_ [class_ "container"] [
-        nav_ [class_ "columns"] [
-              a_ [ class_   "column has-text-centered"
-                   , href_  "https://en.wikipedia.org/wiki/Isomorphic_JavaScript"
-                   , target_ "_blank"
-                   , rel_ "noopener"
-                   ] [
-                  span_ [class_   "icon is-large"] [
-                      i_ [class_   "fa fa-line-chart"] [ ]
-                      ],
-                  p_ [class_   "title is-4"] [
-                     strong_ [] [ text  "Isomorphic"]
-                  ],
-                  p_ [class_   "subtitle"]
-                      [ text  "Seamless web experience" ]
-                  ],
-                  a_ [ class_   "column has-text-centered"
-                     , target_  "_blank"
-                     , href_  "http://book.realworldhaskell.org/read/concurrent-and-multicore-programming.html"
-                     , rel_ "noopener"
-                     ] [
-                    span_ [class_  "icon is-large"] [
-                       i_ [class_  "fa fa-gears"] [ ]
-                    ], p_ [class_  "title is-4"] [
-                        strong_ [] [ text  "Concurrent" ]
-                       ],
-                      p_ [class_   "subtitle"] [
-                        text  "Type-safe and polymorphic, GHC Haskell"
-                       ]
-                    ],
-                  a_ [class_ "column has-text-centered"
-                     , href_  "https://github.com/ghcjs/ghcjs/blob/master/doc/foreign-function-interface.md"
-                     , rel_ "noopener"
-                     , target_  "_blank"
-                     ] [
-                    span_ [class_   "icon is-large"] [
-                       i_ [class_   "fa fa-code-fork"] [ ]
-                    ], p_ [class_   "title is-4"] [
-                        strong_ [] [ text  "Interoperable" ]
-                       ],
-                      p_ [class_   "subtitle"] [
-                        text  "via the GHCJS FFI"
-                        ]
-                    ]
-              ]
-          ]
-        ]
-      ]
 
 -- | Footer
 footer :: View action
 footer =
-  footer_ [ class_  "footer" ] [
-    div_ [ class_  "container", style_ $ M.singleton "line-height" "0.7" ] [
+  footer_ [ class_  "footer", style_ $ M.fromList [
+    (pack "padding-top", pack "2rem")
+    , (pack "padding-bottom", pack "1rem")
+    ]] [
+    div_ [ class_  "container", style_ $ M.singleton "line-height" "0.2" ] [
       div_ [ class_  "content has-text-centered" ] [
          p_ [] [
          text "made using "
@@ -150,7 +95,7 @@ footer =
                                                     [ src_ "https://bulma.io/images/made-with-bulma.png"
                                                     , alt_ "Made with Bulma"
                                                     , width_ "128"
-                                                    , height_ "24"
+                                                    , height_ "22"
                                                     ]
                                                 ] ]
          , p_ [] ["cat-logo by Vektora kato"]

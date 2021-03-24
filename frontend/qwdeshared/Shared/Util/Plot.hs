@@ -29,18 +29,24 @@ drawPlot plot tickers name action =
                       optgroup_ [ prop "label" (toMisoString ("Stock Tickers" :: String)) ] 
                       (map (\x -> option_ [ value_ (toMisoString x) ] [ text (toMisoString x) ] ) tickers)
                     ]
+                , br_ []
+                , button_ [ id_ (toMisoString $ name ++ "btn"), onClick action ] [ text "Render plot" ]
                 , div_ [ id_ . toMisoString $ (name ++ "id") ] [
-                    SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] ([
-                         makeAxis True (P.xAxis plot)
+                    SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] plotArea
+                ]])
+  where
+    showGraph = if (Prelude.null $ P.plotData plot) then "hidden" else "visible"
+    plotArea = if (Prelude.null $ P.plotData plot)
+               then []
+               else ([
+                    makeAxis True (P.xAxis plot)
                          , makeAxis False (P.yAxis plot)
                          , makeLabelpoints True (P.xAxis plot)
                          , makeLabelpoints False (P.yAxis plot)
-                       ] ++ (map (\(p,l) -> makeLine (pairs $ P.xTicks p) (pairs $ P.yTicks p) (P.color l)) (zip (P.plotData plot) (P.legend plot))))
-                   , button_ [ id_ (toMisoString $ name ++ "btn"), onClick action ] [ text "Render plot" ]
-                   , makeLegend (P.legend plot) (toMisoString (name ++ "Legend" :: String))
-                ]])
-  where
-    showGraph = (if (Prelude.null $ P.plotData plot) then "hidden" else "visible" )
+                         ] ++ (map (\(p,l) -> makeLine (pairs $ P.xTicks p) (pairs $ P.yTicks p) (P.color l)) (zip (P.plotData plot) (P.legend plot))))
+                   ++ [br_ []
+                      , makeLegend (P.legend plot) (toMisoString (name ++ "Legend" :: String))
+                      ]
 
 makeAxis :: Bool -> P.Axis -> View Action
 makeAxis isX P.Axis{..} = let letter = if isX then "x" else "y"

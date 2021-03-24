@@ -14,7 +14,7 @@ home m@Model{..} = template header content m
   where
     content = [ 
       (div_ [ class_  "content has-text-centered" ] [
-        (p_ [] [text "Welcome"])
+        (h2_ [] [text "Welcome"])
           , (p_ [] [text "On this site you can explore simple stock plots." ])
           , (p_ [] [text "Use menu in top right to navigate." ])
         ])

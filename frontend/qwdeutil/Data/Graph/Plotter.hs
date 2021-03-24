@@ -58,7 +58,7 @@ fontHeight = 13
 --TODO: labelpoints are probably wrong.
 getPlot :: Int -> Int -> Int -> [String] -> [[Double]] -> [PlotLegend] -> Plot
 getPlot numLabels pxWidth pxHeight xli yli legends
-  | or [null xli] = let axis = Axis 0 0 0 0 [] [] in Plot [(PlotData [] [] [])] axis axis legends
+  | or [null xli] = let axis = Axis 0 0 0 0 [] [] in Plot [] axis axis legends
   | otherwise = Plot {
       plotData = map (\(orig, lam) -> PlotData orig lam (mapToXticks (length lam) pxWidth)) (zip yli yTickies)
       , xAxis = Axis { x1 = axisWidth, x2 = axisWidth, y2 = 0, y1 = pxHeight - fontHeight, labelPoints = xAxisLabelPoints, labels = xLabels }

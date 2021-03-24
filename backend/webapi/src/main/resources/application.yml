@@ -10,4 +10,5 @@ micronaut:
           allowedOrigins:
             - localhost:8081
             - https://qwde.no
+            - http://qwde.no:8084
     port: 8083

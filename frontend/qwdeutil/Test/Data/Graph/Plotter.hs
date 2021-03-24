@@ -9,15 +9,15 @@ import Data.Graph.Plotter
 
 import           Test.HUnit (Test (..), assertEqual)
 
--- test_empty :: Test
--- test_empty = TestCase $
---   let inData = [] :: [Double]
---       plot = getPlot 10 10 10 [] [inData]
---     in
---       assertEqual "labels" [] (labels $ xAxis plot) >>
---       assertEqual "labels" [] (labels $ yAxis plot) >>
---       assertEqual "yticks" (map round inData) ((yTicks . head . plotData) plot)
---
+test_empty :: Test
+test_empty = TestCase $
+  let inData = [] :: [Double]
+      plot = getPlot 0 10 10 (map show ([] :: [Int])) [[]] []
+    in
+      assertEqual "empty" []  (plotData plot) >>
+      assertEqual "labels" [] (labels $ xAxis plot) >>
+      assertEqual "labels" [] (labels $ yAxis plot)
+
 -- test_basic :: Test
 -- test_basic = TestCase $
 --   let inData = [1..10] :: [Double]
@@ -42,13 +42,14 @@ import           Test.HUnit (Test (..), assertEqual)
 --     in
 --       assertEqual "labels" ["2.72", "3.14"] (labels $ yAxis plot)  >>
 --       assertEqual "yTicks" [-24, 0] ((yTicks . head . plotData) plot)
---
--- tests :: Test
--- tests = TestList [ TestLabel "basic" test_basic
---                  , TestLabel "group" test_shorten
---                  , TestLabel "empty" test_empty
---                  , TestLabel "labels" test_labels
---                  ]
---
+
 tests :: Test
-tests = TestList [ ]
+tests = TestList [ 
+  --TestLabel "basic" test_basic
+  -- , TestLabel "group" test_shorten
+  TestLabel "empty" test_empty
+  -- , TestLabel "labels" test_labels
+  ]
+
+-- tests :: Test
+-- tests = TestList [ ]

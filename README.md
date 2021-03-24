@@ -1,6 +1,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![HitCount](http://hits.dwyl.io/kwrl/qwde.svg)](http://hits.dwyl.io/kwrl/qwde) 
 # Stockerface
-The general idea is to analyze stock data. One day in some future we hope to make this into a trading robot. For now, to get code done, its mostly important to have fun and build something interesting.  
+The general idea is to analyze stock data. For now, to get code done, its mostly important to have fun and build something interesting.  
 
 ## Live server
 Code is continuously deployed to https://qwde.no. Its a droplet with 4vCPU and 16 GB RAM. If you want access, send me an email or PM.

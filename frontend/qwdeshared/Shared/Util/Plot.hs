@@ -34,7 +34,6 @@ drawPlot plot tickers name action isDataFetching' =
                 , div_ [ id_ . toMisoString $ (name ++ "id") ] [
                     SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] plotArea
                 ]
-                , br_ []
                 , div_ [id_ (toMisoString (name ++ "Legend" :: String))] legend
                 ])
   where

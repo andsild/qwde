@@ -16,7 +16,7 @@ defaultColor = black
 plotWidth :: Int
 plotWidth = 800
 plotHeight :: Int
-plotHeight = 500
+plotHeight = 335
 numLabels :: Int
 numLabels = 10
 

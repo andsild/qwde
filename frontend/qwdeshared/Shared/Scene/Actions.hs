@@ -4,7 +4,6 @@ module Shared.Scene.Actions
 
 import Data.Aeson (FromJSON, parseJSON, ToJSON(..), defaultOptions, genericParseJSON, genericToJSON)
 import Servant.API (URI(..))
-import Touch
 import GHC.Generics (Generic)
 import Miso.String (MisoString)
 import qualified Data.Time.Calendar as Time
@@ -22,8 +21,6 @@ data Action
   | SetSma QwdeSma
   | SetTickers QwdeTickers
   | SetBollinger QwdeBollinger
-  | HandleTouch TouchEvent
-  | HandleMouse (Int, Int)
   | ParseFromdate MisoString
   | SetFromdate Time.Day
   | ParseTodate MisoString

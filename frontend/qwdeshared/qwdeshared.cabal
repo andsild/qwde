@@ -15,8 +15,7 @@ cabal-version:       >=1.10
 library
   ghc-options:
     -O2 -Wall
-  exposed-modules: Touch
-    , Shared.Page.Home
+  exposed-modules: Shared.Page.Home
     , Shared.Page.MissingPage
     , Shared.Page.Plots
     , Shared.Page.Template

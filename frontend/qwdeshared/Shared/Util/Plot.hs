@@ -13,10 +13,10 @@ import Miso.String hiding (map, zip)
 import qualified Data.Map as M
 import Data.Colour (Colour)
 
-drawPlot :: P.Plot -> [String] -> [Char] -> Action -> View Action
-drawPlot plot tickers name action =
+drawPlot :: P.Plot -> [String] -> [Char] -> Action -> Bool -> View Action
+drawPlot plot tickers name action isDataFetching' =
   div_ [ class_  "content has-text-centered" ] ([
-                -- Not supposed to do this in haskell but hey ho
+                -- Not supposed to do the line below in Haskell/miso but hey ho
                 script_ [] (toMisoString ("document.dispatchEvent(new CustomEvent('QwdePlotLoad'))" :: String))
                 --div_ [ id_ . toMisoString $ (name ++ "cal") ] []
                 , "From date: "
@@ -30,12 +30,16 @@ drawPlot plot tickers name action =
                       (map (\x -> option_ [ value_ (toMisoString x) ] [ text (toMisoString x) ] ) tickers)
                     ]
                 , br_ []
-                , button_ [ id_ (toMisoString $ name ++ "btn"), onClick action ] [ text "Render plot" ]
+                , button_ [ id_ (toMisoString $ name ++ "btn"), onClick action, disabled_ isDataFetching' ] [ text "Render plot" ]
                 , div_ [ id_ . toMisoString $ (name ++ "id") ] [
                     SVG.svg_ [ class_ "graph", SVGA.visibility_ showGraph] plotArea
-                ]])
+                ]
+                , br_ []
+                , div_ [id_ (toMisoString (name ++ "Legend" :: String))] legend
+                ])
   where
     showGraph = if (Prelude.null $ P.plotData plot) then "hidden" else "visible"
+    legend = if (Prelude.null $ P.plotData plot) then [] else makeLegend (P.legend plot)
     plotArea = if (Prelude.null $ P.plotData plot)
                then []
                else ([
@@ -44,9 +48,6 @@ drawPlot plot tickers name action =
                          , makeLabelpoints True (P.xAxis plot)
                          , makeLabelpoints False (P.yAxis plot)
                          ] ++ (map (\(p,l) -> makeLine (pairs $ P.xTicks p) (pairs $ P.yTicks p) (P.color l)) (zip (P.plotData plot) (P.legend plot))))
-                   ++ [br_ []
-                      , makeLegend (P.legend plot) (toMisoString (name ++ "Legend" :: String))
-                      ]
 
 makeAxis :: Bool -> P.Axis -> View Action
 makeAxis isX P.Axis{..} = let letter = if isX then "x" else "y"
@@ -84,8 +85,8 @@ makeLine xp yp c = SVG.g_ [] $ pointsFunc xp yp
     pointsFunc [] (_:_) = []
     pointsFunc (_:_) [] = []
 
-makeLegend :: [P.PlotLegend] -> MisoString -> View Action
-makeLegend pl name = div_ [id_ name] $ map (\l ->
+makeLegend :: [P.PlotLegend] -> [View Action]
+makeLegend pl = map (\l ->
   div_ [ ] [
     div_ [ style_ $ M.fromList [ (pack "background-color", pack (sRGB24show (P.color l))), (pack "display", pack "inline-block"),
        (pack "height", pack "20px"), (pack "width", pack "20px"), (pack "border", pack "2px solid")]] []

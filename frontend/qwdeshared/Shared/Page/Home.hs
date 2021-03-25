@@ -9,7 +9,6 @@ import Shared.Scene.Actions
 import Shared.Scene.Model
 
 home :: Model -> View Action
--- home m@Model{..} = template header [drawPlot randomPlot tickers "random" GetRandom] m
 home m@Model{..} = template header content m
   where
     content = [ 

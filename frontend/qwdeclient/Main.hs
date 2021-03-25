@@ -7,6 +7,7 @@ module Main where
 import Data.Aeson (eitherDecodeStrict)
 import Control.Arrow
 import qualified Data.Graph.Plotter as P
+import qualified Data.List as L
 import qualified Data.Map as M
 import Data.Proxy
 import JavaScript.Web.XMLHttpRequest (Request(..), RequestData(..), xhrByteString, Method(..), contents)
@@ -22,7 +23,6 @@ import Shared.Page.Home
 import Shared.Page.MissingPage
 import Shared.Page.Plots
 import Util.Color
-import Touch
 import qualified Data.Time.Calendar as Time
 
 handlers :: (Model -> View Action) :<|> ((Model -> View Action) :<|> (Model -> View Action))
@@ -41,10 +41,8 @@ main = do
         mountPoint = Nothing
         update = updateModel
         logLevel = DebugPrerender
-        events = M.insert (pack "mousemove") False $
-                 M.insert (pack "touchstart") False $
-                 M.insert (pack "touchmove") False defaultEvents
-        subs = [ uriSub HandleURI, (mouseSub HandleMouse) ]
+        events = defaultEvents
+        subs = [ uriSub HandleURI ]
         viewModel m =
           case runRoute (Proxy :: Proxy ClientRoutes) handlers uri m of
             Left _ -> the404 m
@@ -134,10 +132,10 @@ updateModel ToggleNavMenu m@Model{..} = m { navMenuOpen = not navMenuOpen } <# d
   pure NoOp
 updateModel GetTickers m@Model{..} = m <# do
   SetTickers <$> getTickerList
-updateModel (SetTickers apiData) m@Model{..} = noEff m { ticks = tickers apiData }
+updateModel (SetTickers apiData) m@Model{..} = noEff m { ticks = L.sort $ tickers apiData, isDataFetching = False }
 updateModel GetRandom m@Model{..} = m <# do
   SetRandom <$> getQwdeRandom
-updateModel (SetRandom apiData) m@Model{..} = noEff m { randomPlot = P.getPlot 10 plotWidth (plotHeight - 200)
+updateModel (SetRandom apiData) m@Model{..} = noEff m { isDataFetching = False, randomPlot = P.getPlot 10 plotWidth (plotHeight - 200)
     (take (length $ numbers apiData) $ map show ([1..] :: [Int]))
     ([numbers apiData])
     [P.PlotLegend "random" defaultColor]
@@ -152,28 +150,21 @@ updateModel (ParseSingleTicker s) m@Model{..} = m <# do
   -- TODO: verify in model's tickerlist
   SetSingleTicker <$> return (fromMisoString s)
 updateModel (SetSingleTicker s) m@Model{..} = noEff m { singleTicker = s }
-updateModel GetSma m@Model{..} = m <# do
+updateModel GetSma m@Model{..} = m { isDataFetching = True } <# do
   SetSma <$> getQwdeSma singleTicker fromDate toDate
-updateModel (SetSma apiData) m@Model{..} = noEff m { smaPlot = P.getPlot 10 plotWidth (plotHeight - 200)
+updateModel (SetSma apiData) m@Model{..} = noEff m { isDataFetching = False, smaPlot = P.getPlot 10 plotWidth (plotHeight - 200)
   (take (length $ prices apiData) $ map show ([1..] :: [Int]))
   ([prices apiData] ++ (sma apiData))
   ([P.PlotLegend "sma" defaultColor ] ++ (map (\(i,c) -> P.PlotLegend (show $ i * 10) c) $ take (length $ sma apiData) (zip ([1..] :: [Int]) colorList)))
    }
-updateModel GetBollinger m@Model{..} = m <# do
+updateModel GetBollinger m@Model{..} = m { isDataFetching = True } <# do
   SetBollinger <$> getQwdeBollinger singleTicker fromDate toDate
-updateModel (SetBollinger apiData) m@Model{..} = noEff m { bollingerPlot = P.getPlot 10 plotWidth (plotHeight - 200)
+updateModel (SetBollinger apiData) m@Model{..} = noEff m { isDataFetching = False, bollingerPlot = P.getPlot 10 plotWidth (plotHeight - 200)
   (take (length $ price apiData) $ map show ([1..] :: [Int]))
   [price apiData, lowerBand apiData, highBand apiData, mean apiData]
   [P.PlotLegend "price" defaultColor, P.PlotLegend "lower" (colorList !! 10), P.PlotLegend "upper" (colorList !! 11), P.PlotLegend "mean" (colorList !! 13)]
    }
 updateModel NoOp m = noEff m
-updateModel (HandleTouch (TouchEvent touch)) model =
-  model <# do
-    putStrLn "Touch did move"
-    print touch
-    return $ HandleMouse $ trunc . page $ touch
-updateModel (HandleMouse newCoords) model =
-  noEff model { mouseCords = newCoords }
 
 trunc :: (Double, Double) -> (Int, Int)
 trunc = truncate *** truncate

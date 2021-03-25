@@ -14,7 +14,6 @@ import qualified Shared.Scene.Actions as Actions
 data Model = Model {
   uri :: URI
   , navMenuOpen :: Bool
-  , mouseCords :: (Int, Int)
   , randomPlot :: P.Plot
   , smaPlot :: P.Plot
   , bollingerPlot :: P.Plot
@@ -23,6 +22,7 @@ data Model = Model {
   , ticks :: [String]
   , singleTicker :: String
   , dataLoaded :: Bool
+  , isDataFetching :: Bool
   } deriving (Eq, Show)
 
 initialModel :: IO Model
@@ -36,13 +36,14 @@ initialModel = do
       -- (LocalTime toDay _toTimeOfDay) = utcToLocalTime timeZone curTime
       toDay = Time.fromGregorian 2017 2 28
 
-  pure $ Model uri False (0,0) (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
+  pure $ Model uri False (P.getPlot 10 plotWidth plotHeight (map show ([1..10] :: [Int])) [[1..10]] [P.PlotLegend "" defaultColor])
     (P.getPlot 0 plotWidth plotHeight (map show ([] :: [Int])) [[]] [P.PlotLegend "" defaultColor])
     (P.getPlot 0 plotWidth plotHeight (map show ([] :: [Int])) [[]] [P.PlotLegend "" defaultColor])
     fromDay toDay
     []
     "twtr"
     False
+    True
     where
       uri = case parseURI "http://qwde.no" of
               Just n -> n
